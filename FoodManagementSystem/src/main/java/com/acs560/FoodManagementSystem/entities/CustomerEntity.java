@@ -4,15 +4,25 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+/**
+ * Represents a customer entity in the food management system.
+ */
 @Entity
-@Table(name= "Customers")
+@Table(name = "Customers")
 @Data
 @NoArgsConstructor
-public class CustomerEntity{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@NotNull
-	private Integer customerId;
-	private float rating;
-	
+public class CustomerEntity {
+
+    /**
+     * Unique identifier for the customer.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
+    private Integer customerId;
+
+    /**
+     * Customer's rating based on feedback or performance.
+     */
+    private float rating;
 }

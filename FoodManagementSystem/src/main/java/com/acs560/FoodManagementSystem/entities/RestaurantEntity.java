@@ -4,18 +4,37 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+/**
+ * Represents a restaurant entity in the food management system.
+ */
 @Entity
 @Table(name = "Restaurants")
 @Data
 @NoArgsConstructor
 public class RestaurantEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@NotNull
-	private Integer restaurantId;
-	@NotNull
-	private String restaurantName;
-	private Integer foodPreparationTime;
-	private Integer deliveryTime;
+    /**
+     * Unique identifier for the restaurant.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
+    private Integer restaurantId;
+
+    /**
+     * Name of the restaurant.
+     * This should not be null.
+     */
+    @NotNull
+    private String restaurantName;
+
+    /**
+     * Time taken to prepare food at the restaurant, in minutes.
+     */
+    private Integer foodPreparationTime;
+
+    /**
+     * Time taken for delivery from the restaurant, in minutes.
+     */
+    private Integer deliveryTime;
 }
