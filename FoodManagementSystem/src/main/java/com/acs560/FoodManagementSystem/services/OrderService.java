@@ -3,6 +3,7 @@ package com.acs560.FoodManagementSystem.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.acs560.FoodManagementSystem.entities.CustomerEntity;
 import com.acs560.FoodManagementSystem.entities.OrderEntity;
 
 /**
@@ -50,4 +51,6 @@ public interface OrderService {
      * @return a list of {@link OrderEntity} objects associated with the specified restaurant
      */
     List<OrderEntity> getByRestaurant_RestaurantId(Integer restaurantId);
+    
+    List<OrderEntity> getAll();
 }

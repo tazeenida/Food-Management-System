@@ -1,11 +1,14 @@
 package com.acs560.FoodManagementSystem.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.acs560.FoodManagementSystem.entities.OrderEntity;
+import com.acs560.FoodManagementSystem.entities.RestaurantEntity;
 import com.acs560.FoodManagementSystem.repositories.OrderRepository;
 import com.acs560.FoodManagementSystem.services.OrderService;
 
@@ -23,6 +26,7 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param orderRepository the repository used to access order data
      */
+    @Autowired
     public OrderServiceImpl(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
@@ -81,4 +85,12 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderEntity> getByRestaurant_RestaurantId(Integer restaurantId) {
         return orderRepository.findByRestaurant_RestaurantId(restaurantId);
     }
+
+    
+	@Override
+	public List<OrderEntity> getAll() {
+		List<OrderEntity> orderList =  new ArrayList<>();
+		orderRepository.findAll().forEach(orderList::add);
+		return orderList;
+	}
 }

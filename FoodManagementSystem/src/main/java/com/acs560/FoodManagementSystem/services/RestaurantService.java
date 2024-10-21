@@ -10,6 +10,7 @@ import com.acs560.FoodManagementSystem.entities.RestaurantEntity;
  * Provides methods for retrieving restaurant information based on various criteria.
  */
 public interface RestaurantService {
+	
 
     /**
      * Retrieves a restaurant by its unique restaurant ID.
@@ -42,4 +43,6 @@ public interface RestaurantService {
      * @return a list of {@link RestaurantEntity} objects matching the specified delivery time
      */
     List<RestaurantEntity> getByDeliveryTime(Integer deliveryTime);
+
+	List<RestaurantEntity> getAll();
 }

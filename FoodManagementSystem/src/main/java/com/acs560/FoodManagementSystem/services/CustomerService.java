@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.acs560.FoodManagementSystem.entities.CustomerEntity;
+import com.acs560.FoodManagementSystem.entities.RestaurantEntity;
 
 /**
  * Service interface for managing customer-related operations.
@@ -26,4 +27,6 @@ public interface CustomerService {
      * @return a list of {@link CustomerEntity} objects matching the specified rating
      */
     List<CustomerEntity> getByRating(float rating);
+    
+    List<CustomerEntity> getAll();
 }

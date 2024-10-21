@@ -1,11 +1,14 @@
 package com.acs560.FoodManagementSystem.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.acs560.FoodManagementSystem.entities.CustomerEntity;
+import com.acs560.FoodManagementSystem.entities.OrderEntity;
 import com.acs560.FoodManagementSystem.repositories.CustomerRepository;
 import com.acs560.FoodManagementSystem.services.CustomerService;
 
@@ -22,6 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
      *
      * @param customerRepository the repository used to access customer data
      */
+    @Autowired
     public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
@@ -47,4 +51,13 @@ public class CustomerServiceImpl implements CustomerService {
     public List<CustomerEntity> getByRating(float rating) {
         return customerRepository.findByRating(rating);
     }
+
+   
+    
+	@Override
+	public List<CustomerEntity> getAll() {
+		List<CustomerEntity> customerList = new ArrayList<>();
+		customerRepository.findAll().forEach(customerList::add);
+		return customerList;
+	}
 }

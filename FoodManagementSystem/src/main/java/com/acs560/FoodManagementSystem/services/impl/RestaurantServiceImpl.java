@@ -1,5 +1,6 @@
 package com.acs560.FoodManagementSystem.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,5 +72,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public List<RestaurantEntity> getByDeliveryTime(Integer deliveryTime) {
         return this.restaurantRepository.findByDeliveryTime(deliveryTime);
+    }
+    
+    @Override
+    public List<RestaurantEntity> getAll() {
+        List<RestaurantEntity> restaurantList = new ArrayList<>();
+        restaurantRepository.findAll().forEach(restaurantList::add);
+        return restaurantList;
     }
 }
