@@ -8,7 +8,9 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 
 /**
- * The form to display customer details.
+ * The {@link CustomerDetailView} class represents a form to display and edit customer details.
+ * It extends {@link FormLayout} and provides fields for the customer's name and location.
+ * The form is bound to a {@link Customer} object for data binding and validation.
  */
 public class CustomerDetailView extends FormLayout {
 
@@ -20,7 +22,9 @@ public class CustomerDetailView extends FormLayout {
     private final Binder<Customer> binder = new BeanValidationBinder<>(Customer.class);
 
     /**
-     * Constructor
+     * Constructs a new instance of {@link CustomerDetailView}.
+     * Initializes the form layout, binds fields to the Customer object, 
+     * and sets the width of the form.
      */
     public CustomerDetailView() {
         addClassName("customer-detail");
@@ -32,15 +36,18 @@ public class CustomerDetailView extends FormLayout {
     }
 
     /**
-     * Update the form with customer data for display purposes.
-     * @param customer - the customer to be displayed
+     * Updates the form with the specified customer's data for display purposes.
+     * The customer object is bound to the form fields.
+     *
+     * @param customer the {@link Customer} object containing data to be displayed
      */
     public void setCustomer(Customer customer) {
         binder.readBean(customer); // Bind the customer data to the form fields
     }
 
     /**
-     * Clear form fields when no customer is selected.
+     * Clears the form fields when no customer is selected.
+     * This method can be called to reset the form to its initial state.
      */
     public void clear() {
         binder.readBean(null);  // Clear the form when no customer is selected

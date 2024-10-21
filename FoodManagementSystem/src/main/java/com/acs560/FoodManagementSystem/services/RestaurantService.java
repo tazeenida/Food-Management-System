@@ -7,16 +7,27 @@ import com.acs560.FoodManagementSystem.entities.RestaurantEntity;
 
 /**
  * Service interface for managing restaurant-related operations.
- * Provides methods for retrieving restaurant information based on various criteria.
+ * <p>
+ * This interface provides methods for retrieving restaurant information
+ * based on various criteria, such as restaurant ID, name, food preparation time,
+ * and delivery time.
+ * </p>
  */
 public interface RestaurantService {
 	
+    /**
+     * Retrieves a list of all restaurants.
+     *
+     * @return a list of all {@link RestaurantEntity} objects
+     */
+    List<RestaurantEntity> getAll();
 
     /**
      * Retrieves a restaurant by its unique restaurant ID.
      *
      * @param restaurantId the ID of the restaurant to retrieve
-     * @return an {@link Optional} containing the {@link RestaurantEntity} if found, or an empty Optional if not found
+     * @return an {@link Optional} containing the {@link RestaurantEntity} if found,
+     *         or an empty Optional if not found
      */
     Optional<RestaurantEntity> getByRestaurantId(Integer restaurantId);
 
@@ -43,6 +54,4 @@ public interface RestaurantService {
      * @return a list of {@link RestaurantEntity} objects matching the specified delivery time
      */
     List<RestaurantEntity> getByDeliveryTime(Integer deliveryTime);
-
-	List<RestaurantEntity> getAll();
 }

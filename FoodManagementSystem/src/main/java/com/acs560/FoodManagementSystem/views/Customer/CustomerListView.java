@@ -1,4 +1,4 @@
-package com.acs560.FoodManagementSystem.views.Customer;
+package com.acs560.FoodManagementSystem.views.Customer; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -18,6 +18,10 @@ import jakarta.annotation.security.PermitAll;
 
 import java.util.List;
 
+/**
+ * The {@link CustomerListView} class provides a user interface for managing and displaying a list of customers.
+ * It extends {@link VerticalLayout} and utilizes a grid to present customer data, along with a filter for searching customers.
+ */
 @SpringComponent
 @Scope("prototype")
 @PermitAll
@@ -33,6 +37,12 @@ public class CustomerListView extends VerticalLayout {
     private final Grid<CustomerEntity> grid;
     private final TextField filterText;
 
+    /**
+     * Constructs a new instance of {@link CustomerListView}.
+     * Initializes the view components, including the customer grid and filter text field.
+     *
+     * @param customerService the service used to access customer data
+     */
     public CustomerListView(CustomerService customerService) {
         this.customerService = customerService;
 
@@ -46,6 +56,11 @@ public class CustomerListView extends VerticalLayout {
         updateGrid(); // Load initial customer data
     }
 
+    /**
+     * Creates and configures the grid for displaying customer data.
+     *
+     * @return a configured {@link Grid} of {@link CustomerEntity} objects
+     */
     private Grid<CustomerEntity> createGrid() {
         Grid<CustomerEntity> grid = new Grid<>(CustomerEntity.class);
         grid.addClassNames("customer-grid");
@@ -56,6 +71,11 @@ public class CustomerListView extends VerticalLayout {
         return grid;
     }
 
+    /**
+     * Creates and configures the filter text field for searching customers.
+     *
+     * @return a configured {@link TextField} for filtering customer data
+     */
     private TextField createFilter() {
         TextField filterText = new TextField();
         filterText.setValueChangeTimeout(1000);
@@ -67,12 +87,22 @@ public class CustomerListView extends VerticalLayout {
         return filterText;
     }
 
+    /**
+     * Creates a toolbar containing the filter text field.
+     *
+     * @param filterText the filter text field to be added to the toolbar
+     * @return a {@link Component} representing the toolbar
+     */
     private Component createToolbar(TextField filterText) {
         var toolbar = new HorizontalLayout(filterText);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
+    /**
+     * Updates the grid with customer data based on the filter text.
+     * If the filter is empty, all customers are displayed. If a valid customer ID is provided, it fetches the corresponding customer.
+     */
     private void updateGrid() {
         String filter = filterText.getValue();
         List<CustomerEntity> customers;

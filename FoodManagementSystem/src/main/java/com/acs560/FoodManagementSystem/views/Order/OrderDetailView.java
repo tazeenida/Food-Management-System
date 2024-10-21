@@ -8,7 +8,8 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 
 /**
- * The form to display order details.
+ * The {@link OrderDetailView} class represents a form for displaying the details of an order.
+ * It extends {@link FormLayout} and utilizes various text fields to present order data.
  */
 public class OrderDetailView extends FormLayout {
 
@@ -23,7 +24,8 @@ public class OrderDetailView extends FormLayout {
     private final Binder<OrderEntity> binder = new BeanValidationBinder<>(OrderEntity.class);
 
     /**
-     * Constructor
+     * Constructs a new instance of {@link OrderDetailView}.
+     * Initializes the form fields and binds them to the corresponding fields in {@link OrderEntity}.
      */
     public OrderDetailView() {
         addClassName("order-detail");
@@ -42,15 +44,17 @@ public class OrderDetailView extends FormLayout {
     }
 
     /**
-     * Update the form with order data for display purposes.
-     * @param order - the order to be displayed
+     * Updates the form with order data for display purposes.
+     *
+     * @param order the order to be displayed, represented as an {@link OrderEntity}
      */
     public void setOrder(OrderEntity order) {
         binder.readBean(order); // Bind the order data to the form fields
     }
 
     /**
-     * Clear form fields when no order is selected.
+     * Clears the form fields when no order is selected.
+     * This method resets the binder and clears any displayed data.
      */
     public void clear() {
         binder.readBean(null);  // Clear the form when no order is selected

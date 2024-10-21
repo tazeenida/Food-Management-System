@@ -13,7 +13,11 @@ import com.acs560.FoodManagementSystem.services.RestaurantService;
 
 /**
  * Implementation of the {@link RestaurantService} interface for managing restaurant-related operations.
- * This class provides methods for retrieving restaurant information based on various criteria.
+ * <p>
+ * This class provides methods for retrieving restaurant information based on various criteria,
+ * such as restaurant ID, name, food preparation time, and delivery time. It utilizes the
+ * {@link RestaurantRepository} to access restaurant data from the underlying data source.
+ * </p>
  */
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
@@ -29,12 +33,25 @@ public class RestaurantServiceImpl implements RestaurantService {
     public RestaurantServiceImpl(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
     }
+    
+    /**
+     * Retrieves a list of all restaurants.
+     *
+     * @return a list of all {@link RestaurantEntity} objects
+     */
+    @Override
+    public List<RestaurantEntity> getAll() {
+        List<RestaurantEntity> restaurantList = new ArrayList<>();
+        restaurantRepository.findAll().forEach(restaurantList::add);
+        return restaurantList;
+    }
 
     /**
      * Retrieves a restaurant by its unique restaurant ID.
      *
      * @param restaurantId the ID of the restaurant to retrieve
-     * @return an {@link Optional} containing the {@link RestaurantEntity} if found, or an empty Optional if not found
+     * @return an {@link Optional} containing the {@link RestaurantEntity} if found,
+     *         or an empty Optional if not found
      */
     @Override
     public Optional<RestaurantEntity> getByRestaurantId(Integer restaurantId) {
@@ -74,10 +91,4 @@ public class RestaurantServiceImpl implements RestaurantService {
         return this.restaurantRepository.findByDeliveryTime(deliveryTime);
     }
     
-    @Override
-    public List<RestaurantEntity> getAll() {
-        List<RestaurantEntity> restaurantList = new ArrayList<>();
-        restaurantRepository.findAll().forEach(restaurantList::add);
-        return restaurantList;
-    }
 }

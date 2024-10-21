@@ -18,18 +18,32 @@ import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+/**
+ * The {@link MainLayout} class represents the main layout for the Food Management System application.
+ * It extends {@link AppLayout} and provides a header and a navigation drawer for navigating between different views.
+ */
 public class MainLayout extends AppLayout {
     private static final long serialVersionUID = -5291741451913578403L;
 
     @Autowired
     private final SecurityService securityService;
 
+    /**
+     * Constructs a new instance of {@link MainLayout}.
+     * Initializes the layout and sets up the header and navigation drawer.
+     *
+     * @param securityService the {@link SecurityService} used for user authentication and logout
+     */
     public MainLayout(SecurityService securityService) {
         this.securityService = securityService;
         createHeader();
         createDrawer();
     }
 
+    /**
+     * Creates the header of the layout, which includes the application logo and a logout button.
+     * The logout button displays the authenticated user's username.
+     */
     private void createHeader() {
         H1 logo = new H1("Food Management System");
         logo.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.MEDIUM);
@@ -49,6 +63,10 @@ public class MainLayout extends AppLayout {
         addToNavbar(header);
     }
 
+    /**
+     * Creates the navigation drawer with links to different views in the application.
+     * Includes links to the order, customer, and restaurant views.
+     */
     private void createDrawer() {
         // Create navigation links
         RouterLink orderLink = new RouterLink("", OrderListView.class);

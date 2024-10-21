@@ -19,6 +19,10 @@ import jakarta.annotation.security.PermitAll;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The {@link OrderListView} class provides a user interface for displaying and managing orders.
+ * It extends {@link VerticalLayout} and includes functionality for filtering and listing orders.
+ */
 @SpringComponent
 @Scope("prototype")
 @PermitAll
@@ -34,6 +38,13 @@ public class OrderListView extends VerticalLayout {
     private final Grid<OrderEntity> grid;
     private final TextField filterText;
 
+    /**
+     * Constructs a new instance of {@link OrderListView}.
+     * Initializes the layout, grid for displaying orders, and the filter text field.
+     * Loads the initial order data into the grid.
+     *
+     * @param orderService the service to manage order data
+     */
     public OrderListView(OrderService orderService) {
         this.orderService = orderService;
 
@@ -47,6 +58,11 @@ public class OrderListView extends VerticalLayout {
         updateGrid(); // Load initial order data
     }
 
+    /**
+     * Creates and configures a grid for displaying orders.
+     *
+     * @return a configured {@link Grid} instance for {@link OrderEntity}
+     */
     private Grid<OrderEntity> createGrid() {
         Grid<OrderEntity> grid = new Grid<>(OrderEntity.class);
         grid.addClassNames("order-grid");
@@ -59,6 +75,11 @@ public class OrderListView extends VerticalLayout {
         return grid;
     }
 
+    /**
+     * Creates a text field for filtering orders based on the order ID.
+     *
+     * @return a configured {@link TextField} instance for filtering
+     */
     private TextField createFilter() {
         TextField filterText = new TextField();
         filterText.setValueChangeTimeout(1000);
@@ -70,12 +91,23 @@ public class OrderListView extends VerticalLayout {
         return filterText;
     }
 
+    /**
+     * Creates a toolbar containing the filter text field.
+     *
+     * @param filterText the text field used for filtering orders
+     * @return a {@link HorizontalLayout} containing the toolbar components
+     */
     private Component createToolbar(TextField filterText) {
         var toolbar = new HorizontalLayout(filterText);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
+    /**
+     * Updates the grid with orders based on the current filter text.
+     * If the filter is empty, all orders are displayed.
+     * If the filter contains a valid order ID, only the matching order is displayed.
+     */
     private void updateGrid() {
         String filter = filterText.getValue();
         List<OrderEntity> orders;

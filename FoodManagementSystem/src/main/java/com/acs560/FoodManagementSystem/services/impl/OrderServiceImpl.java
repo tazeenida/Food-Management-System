@@ -8,13 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.acs560.FoodManagementSystem.entities.OrderEntity;
-import com.acs560.FoodManagementSystem.entities.RestaurantEntity;
 import com.acs560.FoodManagementSystem.repositories.OrderRepository;
 import com.acs560.FoodManagementSystem.services.OrderService;
 
 /**
  * Implementation of the {@link OrderService} interface for managing order-related operations.
- * This class provides methods for retrieving order information based on various criteria.
+ * <p>
+ * This class provides methods for retrieving order information based on various criteria,
+ * such as order ID, cost, customer, and restaurant. It utilizes the {@link OrderRepository}
+ * to access order data from the underlying data source.
+ * </p>
  */
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -31,11 +34,25 @@ public class OrderServiceImpl implements OrderService {
         this.orderRepository = orderRepository;
     }
 
+    
+    /**
+     * Retrieves a list of all orders.
+     *
+     * @return a list of all {@link OrderEntity} objects
+     */
+    @Override
+    public List<OrderEntity> getAll() {
+        List<OrderEntity> orderList = new ArrayList<>();
+        orderRepository.findAll().forEach(orderList::add);
+        return orderList;
+    }
+    
     /**
      * Retrieves an order by its unique order ID.
      *
      * @param orderId the ID of the order to retrieve
-     * @return an {@link Optional} containing the {@link OrderEntity} if found, or an empty Optional if not found
+     * @return an {@link Optional} containing the {@link OrderEntity} if found,
+     *         or an empty Optional if not found
      */
     @Override
     public Optional<OrderEntity> getByOrderId(Integer orderId) {
@@ -87,10 +104,4 @@ public class OrderServiceImpl implements OrderService {
     }
 
     
-	@Override
-	public List<OrderEntity> getAll() {
-		List<OrderEntity> orderList =  new ArrayList<>();
-		orderRepository.findAll().forEach(orderList::add);
-		return orderList;
-	}
 }

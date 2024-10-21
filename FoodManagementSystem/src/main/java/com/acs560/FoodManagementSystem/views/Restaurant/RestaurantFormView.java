@@ -8,6 +8,12 @@ import com.vaadin.flow.component.textfield.TextField;
 
 import lombok.Getter;
 
+/**
+ * The {@link RestaurantFormView} class provides a form layout for displaying
+ * and updating restaurant details.
+ * It extends {@link FormLayout} and includes fields for the restaurant's name,
+ * food preparation time, and delivery time.
+ */
 public class RestaurantFormView extends FormLayout {
 
     private final TextField restaurantName = new TextField("Restaurant Name");
@@ -17,7 +23,8 @@ public class RestaurantFormView extends FormLayout {
     private Restaurant restaurant;
 
     /**
-     * Constructor
+     * Constructs a new instance of {@link RestaurantFormView}.
+     * Initializes the form layout with fields for restaurant details.
      */
     public RestaurantFormView() {
         add(restaurantName, foodPreparationTime, deliveryTime);
@@ -25,8 +32,11 @@ public class RestaurantFormView extends FormLayout {
     }
 
     /**
-     * Update the form with the restaurant details
-     * @param restaurant - the restaurant 
+     * Updates the form with the provided restaurant details.
+     * If the restaurant is not null, the form fields are populated with
+     * the restaurant's details. If the restaurant is null, the fields are cleared.
+     *
+     * @param restaurant the restaurant to display in the form
      */
     public void update(Restaurant restaurant) {
         this.restaurant = restaurant;

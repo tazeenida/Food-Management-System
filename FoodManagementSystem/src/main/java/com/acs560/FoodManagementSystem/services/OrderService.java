@@ -3,20 +3,31 @@ package com.acs560.FoodManagementSystem.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.acs560.FoodManagementSystem.entities.CustomerEntity;
 import com.acs560.FoodManagementSystem.entities.OrderEntity;
 
 /**
  * Service interface for managing order-related operations.
- * Provides methods for retrieving order information based on various criteria.
+ * <p>
+ * This interface provides methods for retrieving order information
+ * based on various criteria, such as order ID, cost, customer ID, 
+ * and restaurant ID.
+ * </p>
  */
 public interface OrderService {
 
     /**
+     * Retrieves a list of all orders.
+     *
+     * @return a list of all {@link OrderEntity} objects
+     */
+    List<OrderEntity> getAll();
+    
+    /**
      * Retrieves an order by its unique order ID.
      *
      * @param orderId the ID of the order to retrieve
-     * @return an {@link Optional} containing the {@link OrderEntity} if found, or an empty Optional if not found
+     * @return an {@link Optional} containing the {@link OrderEntity} if found,
+     *         or an empty Optional if not found
      */
     Optional<OrderEntity> getByOrderId(Integer orderId);
 
@@ -52,5 +63,4 @@ public interface OrderService {
      */
     List<OrderEntity> getByRestaurant_RestaurantId(Integer restaurantId);
     
-    List<OrderEntity> getAll();
 }

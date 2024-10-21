@@ -19,6 +19,15 @@ import jakarta.annotation.security.PermitAll;
 
 import java.util.List;
 
+/**
+ * The {@link RestaurantListView} class is responsible for displaying a list of
+ * restaurants in the Food Management System. It provides functionalities to
+ * filter restaurants and view their details.
+ * 
+ * This class extends {@link VerticalLayout} and contains a grid for displaying
+ * restaurant entities, a form for restaurant details, and a filter field for
+ * searching by restaurant name.
+ */
 @SpringComponent
 @Scope("prototype")
 @PermitAll
@@ -26,87 +35,128 @@ import java.util.List;
 @PageTitle("Restaurants | Food Management System")
 public class RestaurantListView extends VerticalLayout {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Autowired
-	private RestaurantService restaurantService;
+    @Autowired
+    private RestaurantService restaurantService;
 
-	private final Grid<RestaurantEntity> grid;
-	private final TextField filterText;
-	private final RestaurantFormView restaurantForm;
+    private final Grid<RestaurantEntity> grid;
+    private final TextField filterText;
+    private final RestaurantFormView restaurantForm;
 
-	public RestaurantListView(RestaurantService restaurantService) {
-		this.restaurantService = restaurantService;
+    /**
+     * Constructs a new instance of {@link RestaurantListView}.
+     * Initializes the view with a grid to display restaurants, a form to edit
+     * restaurant details, and a filter field for searching restaurants.
+     *
+     * @param restaurantService the service to handle restaurant-related operations
+     */
+    public RestaurantListView(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
 
-		addClassName("list-view");
-		setSizeFull();
+        addClassName("list-view");
+        setSizeFull();
 
-		grid = createGrid();
-		restaurantForm = createForm();
-		filterText = createFilter();
+        grid = createGrid();
+        restaurantForm = createForm();
+        filterText = createFilter();
 
-		add(createToolbar(filterText), getContent());
-		updateGrid(); // Load initial restaurant data
-		closeForm();
-	}
+        add(createToolbar(filterText), getContent());
+        updateGrid(); // Load initial restaurant data
+        closeForm();
+    }
 
-	private RestaurantFormView createForm() {
-		RestaurantFormView restaurantForm = new RestaurantFormView();
-		restaurantForm.setVisible(false); // Initially hide the form
-		return restaurantForm;
-	}
+    /**
+     * Creates and returns a form view for restaurant details.
+     * 
+     * @return the created restaurant form view
+     */
+    private RestaurantFormView createForm() {
+        RestaurantFormView restaurantForm = new RestaurantFormView();
+        restaurantForm.setVisible(false); // Initially hide the form
+        return restaurantForm;
+    }
 
-	private Grid<RestaurantEntity> createGrid() {
-		Grid<RestaurantEntity> grid = new Grid<>(RestaurantEntity.class);
-		grid.addClassNames("restaurant-grid");
-		grid.setSizeFull();
-		grid.setColumns("restaurantId", "restaurantName", "foodPreparationTime", "deliveryTime");
-		grid.getColumns().forEach(col -> col.setAutoWidth(true));
+    /**
+     * Creates and returns a grid for displaying restaurant entities.
+     * 
+     * @return the created grid for restaurant entities
+     */
+    private Grid<RestaurantEntity> createGrid() {
+        Grid<RestaurantEntity> grid = new Grid<>(RestaurantEntity.class);
+        grid.addClassNames("restaurant-grid");
+        grid.setSizeFull();
+        grid.setColumns("restaurantId", "restaurantName", "foodPreparationTime", "deliveryTime");
+        grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-		return grid;
-	}
+        return grid;
+    }
 
-	private TextField createFilter() {
-		TextField filterText = new TextField();
-		filterText.setValueChangeTimeout(1000);
-		filterText.setPlaceholder("Filter by name...");
-		filterText.setClearButtonVisible(true);
-		filterText.setValueChangeMode(ValueChangeMode.LAZY);
-		filterText.addValueChangeListener(e -> updateGrid()); // Call updateGrid on value change
+    /**
+     * Creates and returns a text field for filtering restaurants by name.
+     * 
+     * @return the created filter text field
+     */
+    private TextField createFilter() {
+        TextField filterText = new TextField();
+        filterText.setValueChangeTimeout(1000);
+        filterText.setPlaceholder("Filter by name...");
+        filterText.setClearButtonVisible(true);
+        filterText.setValueChangeMode(ValueChangeMode.LAZY);
+        filterText.addValueChangeListener(e -> updateGrid()); // Call updateGrid on value change
 
-		return filterText;
-	}
+        return filterText;
+    }
 
-	private Component createToolbar(TextField filterText) {
-		var toolbar = new HorizontalLayout(filterText);
-		toolbar.addClassName("toolbar");
-		return toolbar;
-	}
+    /**
+     * Creates and returns a toolbar containing the filter text field.
+     * 
+     * @param filterText the text field for filtering restaurants
+     * @return the created toolbar component
+     */
+    private Component createToolbar(TextField filterText) {
+        var toolbar = new HorizontalLayout(filterText);
+        toolbar.addClassName("toolbar");
+        return toolbar;
+    }
 
-	private HorizontalLayout getContent() {
-		HorizontalLayout content = new HorizontalLayout(grid, restaurantForm);
-		content.setFlexGrow(2, grid);
-		content.setFlexGrow(1, restaurantForm);
-		content.addClassNames("content");
-		content.setSizeFull();
-		return content;
-	}
+    /**
+     * Creates and returns a layout containing the grid and the restaurant form.
+     * 
+     * @return the content layout consisting of the grid and restaurant form
+     */
+    private HorizontalLayout getContent() {
+        HorizontalLayout content = new HorizontalLayout(grid, restaurantForm);
+        content.setFlexGrow(2, grid);
+        content.setFlexGrow(1, restaurantForm);
+        content.addClassNames("content");
+        content.setSizeFull();
+        return content;
+    }
 
-	private void updateGrid() {
-		String filter = filterText.getValue();
-		List<RestaurantEntity> restaurants;
+    /**
+     * Updates the grid with the list of restaurants based on the current filter.
+     * If the filter is empty, all restaurants are displayed. Otherwise, the grid
+     * is populated with restaurants matching the filter.
+     */
+    private void updateGrid() {
+        String filter = filterText.getValue();
+        List<RestaurantEntity> restaurants;
 
-		if (filter == null || filter.isEmpty()) {
-			restaurants = restaurantService.getAll();
-		} else {
-			restaurants = restaurantService.getByRestaurantName(filter);
-		}
+        if (filter == null || filter.isEmpty()) {
+            restaurants = restaurantService.getAll();
+        } else {
+            restaurants = restaurantService.getByRestaurantName(filter);
+        }
 
-		grid.setItems(restaurants);
-	}
+        grid.setItems(restaurants);
+    }
 
-	private void closeForm() {
-		restaurantForm.setVisible(false);
-		removeClassName("editing");
-	}
+    /**
+     * Closes the restaurant form by hiding it and removing the editing class.
+     */
+    private void closeForm() {
+        restaurantForm.setVisible(false);
+        removeClassName("editing");
+    }
 }
