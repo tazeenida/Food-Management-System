@@ -28,7 +28,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
         login.setAction("login");
 
-        add(new H1("Bills Analyzer"));
+        add(new H1("Food Management System"));
         
         // Displaying these as helper...don't do this in prod
         // Consider removing this or implementing a proper mechanism
