@@ -37,7 +37,7 @@ public class OrderEntity {
     @ManyToOne
     @NotNull
     @JoinColumn(name = "customer_id")
-    private CustomerEntity customer; // Changed from customerId to customer
+    private CustomerEntity customer;
 
     /**
      * Restaurant from which the order was placed.
@@ -46,5 +46,5 @@ public class OrderEntity {
     @ManyToOne
     @NotNull
     @JoinColumn(name = "restaurant_id")
-    private RestaurantEntity restaurant; // Changed from restaurantId to restaurant
+    private RestaurantEntity restaurant; 
 }

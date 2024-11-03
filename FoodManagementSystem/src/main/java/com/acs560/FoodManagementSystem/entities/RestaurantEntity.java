@@ -18,7 +18,6 @@ public class RestaurantEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Integer restaurantId;
 
     /**

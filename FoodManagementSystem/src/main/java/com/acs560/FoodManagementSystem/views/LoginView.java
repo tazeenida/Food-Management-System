@@ -30,8 +30,6 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
         add(new H1("Food Management System"));
         
-        // Displaying these as helper...don't do this in prod
-        // Consider removing this or implementing a proper mechanism
         add(new Span("Username: user, Password: userpass"));
         add(new Span("Username: admin, Password: adminpass"));
         add(login);

@@ -20,7 +20,8 @@ import java.util.List;
 
 /**
  * The {@link CustomerListView} class provides a user interface for managing and displaying a list of customers.
- * It extends {@link VerticalLayout} and utilizes a grid to present customer data, along with a filter for searching customers.
+ * It extends {@link VerticalLayout} and utilizes a grid to present customer data, along with a filter 
+ * for searching customers by their ID.
  */
 @SpringComponent
 @Scope("prototype")
@@ -53,7 +54,7 @@ public class CustomerListView extends VerticalLayout {
         filterText = createFilter();
 
         add(createToolbar(filterText), grid);
-        updateGrid(); // Load initial customer data
+        updateGrid();
     }
 
     /**
@@ -101,7 +102,8 @@ public class CustomerListView extends VerticalLayout {
 
     /**
      * Updates the grid with customer data based on the filter text.
-     * If the filter is empty, all customers are displayed. If a valid customer ID is provided, it fetches the corresponding customer.
+     * If the filter is empty, all customers are displayed. 
+     * If a valid customer ID is provided, it fetches the corresponding customer.
      */
     private void updateGrid() {
         String filter = filterText.getValue();
@@ -114,7 +116,7 @@ public class CustomerListView extends VerticalLayout {
                 Integer customerId = Integer.parseInt(filter);
                 customers = customerService.getByCustomerId(customerId).map(List::of).orElse(List.of());
             } catch (NumberFormatException e) {
-                customers = List.of(); // Return an empty list if the input is invalid
+                customers = List.of();
             }
         }
 

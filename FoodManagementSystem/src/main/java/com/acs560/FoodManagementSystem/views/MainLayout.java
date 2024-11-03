@@ -48,18 +48,15 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1("Food Management System");
         logo.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.MEDIUM);
         
-        // Get authenticated username
         String username = securityService.getAuthenticatedUser().getUsername();
         Button logout = new Button("Log out " + username, e -> securityService.logout());
         
-        // Create header layout
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo);
         header.setWidthFull();
         header.addClassNames(LumoUtility.Padding.Vertical.NONE, LumoUtility.Padding.Horizontal.MEDIUM);
         
-        // Add the header to the navbar
         addToNavbar(header);
     }
 
@@ -68,14 +65,12 @@ public class MainLayout extends AppLayout {
      * Includes links to the order, customer, and restaurant views.
      */
     private void createDrawer() {
-        // Create navigation links
-        RouterLink orderLink = new RouterLink("", OrderListView.class);
+        RouterLink orderLink = new RouterLink("Orders", OrderListView.class);
         orderLink.setHighlightCondition(HighlightConditions.sameLocation());
         
         RouterLink customerLink = new RouterLink("Customers", CustomerListView.class);
         RouterLink restaurantLink = new RouterLink("Restaurants", RestaurantListView.class);
         
-        // Add links to the drawer
         addToDrawer(new VerticalLayout(orderLink, customerLink, restaurantLink));
     }
 }
