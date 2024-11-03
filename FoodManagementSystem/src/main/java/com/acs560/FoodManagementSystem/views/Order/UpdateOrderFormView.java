@@ -14,6 +14,10 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * The {@link UpdateOrderFormView} class provides a user interface for updating an existing order.
+ * It extends {@link VerticalLayout} and includes various fields to input order details.
+ */
 @PermitAll
 @Route(value = "update-order-form")
 @PageTitle("Update Order Form | Food Management System")
@@ -28,14 +32,18 @@ public class UpdateOrderFormView extends VerticalLayout {
     private IntegerField foodPreparationTimeField;
     private IntegerField deliveryTimeField;
     private TextField customerRatingField;
-    private Button addOrderButton;
     private Button updateOrderButton;
 
+    /**
+     * Constructs a new instance of {@link UpdateOrderFormView}.
+     * Initializes the form fields and the order service.
+     *
+     * @param orderService the service used to manage order data
+     */
     @Autowired
     public UpdateOrderFormView(OrderService orderService) {
         this.orderService = orderService;
 
-        // Create UI components
         orderIdField = new TextField("Order ID (for update)");
         orderIdField.setEnabled(false);
         costOfOrderField = new TextField("Cost of Order");
@@ -46,7 +54,7 @@ public class UpdateOrderFormView extends VerticalLayout {
         deliveryTimeField = new IntegerField("Delivery Time (minutes)");
         customerRatingField = new TextField("Customer Rating (0-5)");
 
-           updateOrderButton = new Button("Update Order", event -> {
+        updateOrderButton = new Button("Update Order", event -> {
             orderIdField.setEnabled(true);
             updateOrder();
         });
@@ -55,11 +63,15 @@ public class UpdateOrderFormView extends VerticalLayout {
         FormLayout formLayout = new FormLayout();
         formLayout.add(orderIdField, costOfOrderField, dayOfTheWeekField, restaurantNameField,
                        foodPreparationTimeField, deliveryTimeField, customerRatingField,
-                        updateOrderButton, backButton);
+                       updateOrderButton, backButton);
 
-        add(formLayout);
+        add(formLayout);  
     }
 
+    /**
+     * Updates the order with the data provided in the form fields.
+     * Displays a notification upon success or failure of the update operation.
+     */
     private void updateOrder() {
         if (validateFields(true)) {
             try {
@@ -75,22 +87,26 @@ public class UpdateOrderFormView extends VerticalLayout {
 
                 orderService.updateOrder(orderId, updatedOrder, restaurantName, foodPreparationTime, deliveryTime, customerRating);
                 Notification.show("Order updated successfully!");
-                clearFields();
-                getUI().ifPresent(ui -> ui.navigate(OrderListView.class));
+                clearFields(); 
+                getUI().ifPresent(ui -> ui.navigate(OrderListView.class)); 
             } catch (Exception e) {
                 Notification.show("Error updating order: " + e.getMessage());
             }
         }
     }
 
+    /**
+     * Validates the input fields to ensure that they contain valid data.
+     *
+     * @param isUpdate boolean flag indicating if the update process is in progress
+     * @return true if all fields are valid; false otherwise
+     */
     private boolean validateFields(boolean isUpdate) {
         try {
-            // Only validate orderIdField if updating an order
             if (isUpdate && !orderIdField.getValue().isEmpty()) {
                 Integer.parseInt(orderIdField.getValue());
             }
 
-            // Validate Integer fields
             if (foodPreparationTimeField.getValue() == null) {
                 throw new NumberFormatException("Food Preparation Time is required.");
             }
@@ -98,7 +114,6 @@ public class UpdateOrderFormView extends VerticalLayout {
                 throw new NumberFormatException("Delivery Time is required.");
             }
 
-            // Validate Float fields
             if (!costOfOrderField.getValue().isEmpty()) {
                 Float.parseFloat(costOfOrderField.getValue());
             }
@@ -116,6 +131,9 @@ public class UpdateOrderFormView extends VerticalLayout {
         }
     }
 
+    /**
+     * Clears all the input fields in the form.
+     */
     private void clearFields() {
         orderIdField.clear();
         costOfOrderField.clear();

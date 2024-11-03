@@ -62,7 +62,7 @@ public class RestaurantListView extends VerticalLayout {
         filterText = createFilter();
 
         add(createToolbar(filterText), getContent());
-        updateGrid(); // Load initial restaurant data
+        updateGrid(); 
         closeForm();
     }
 
@@ -73,7 +73,7 @@ public class RestaurantListView extends VerticalLayout {
      */
     private RestaurantFormView createForm() {
         RestaurantFormView restaurantForm = new RestaurantFormView();
-        restaurantForm.setVisible(false); // Initially hide the form
+        restaurantForm.setVisible(false); 
         return restaurantForm;
     }
 
@@ -103,7 +103,7 @@ public class RestaurantListView extends VerticalLayout {
         filterText.setPlaceholder("Filter by name...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
-        filterText.addValueChangeListener(e -> updateGrid()); // Call updateGrid on value change
+        filterText.addValueChangeListener(e -> updateGrid()); 
 
         return filterText;
     }

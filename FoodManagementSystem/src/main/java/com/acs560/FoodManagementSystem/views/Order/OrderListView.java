@@ -60,7 +60,7 @@ public class OrderListView extends VerticalLayout {
         deleteOrderButton = new Button("Delete Order", event -> navigateToDeleteOrder());
 
         add(createToolbar(filterText, addOrderButton, updateOrderButton, deleteOrderButton), grid);
-        updateGrid(); // Load initial order data
+        updateGrid(); 
     }
 
     /**
@@ -73,11 +73,10 @@ public class OrderListView extends VerticalLayout {
         grid.addClassNames("order-grid");
         grid.setSizeFull();
         
-        // Set columns based on the fields in OrderEntity
         grid.setColumns("orderId", "costOfOrder", "dayOfTheWeek", "customer", "restaurant");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        grid.asSingleSelect().addValueChangeListener(event -> updateOrderButton.setEnabled(event.getValue() != null)); // Enable update button if an order is selected
+        grid.asSingleSelect().addValueChangeListener(event -> updateOrderButton.setEnabled(event.getValue() != null));
 
         return grid;
     }
@@ -104,6 +103,7 @@ public class OrderListView extends VerticalLayout {
      * @param filterText the text field used for filtering orders
      * @param addOrderButton the button for adding new orders
      * @param updateOrderButton the button for updating existing orders
+     * @param deleteOrderButton the button for deleting orders
      * @return a {@link HorizontalLayout} containing the toolbar components
      */
     private Component createToolbar(TextField filterText, Button addOrderButton, Button updateOrderButton, Button deleteOrderButton) {
@@ -114,35 +114,45 @@ public class OrderListView extends VerticalLayout {
 
     /**
      * Updates the grid with orders based on the current filter text.
+     * It retrieves orders from the {@link OrderService} and sets them in the grid.
      */
     private void updateGrid() {
         String filter = filterText.getValue();
         List<OrderEntity> orders;
 
         if (filter == null || filter.isEmpty()) {
-            orders = orderService.getAll(); // Get all orders if no filter
+            orders = orderService.getAll(); 
         } else {
             try {
-                Integer orderId = Integer.parseInt(filter); // Filter by order ID
+                Integer orderId = Integer.parseInt(filter); 
                 Optional<OrderEntity> orderOpt = orderService.getByOrderId(orderId);
-                orders = orderOpt.map(List::of).orElseGet(List::of); // If found, return as a single-item list, else empty list
+                orders = orderOpt.map(List::of).orElseGet(List::of); 
             } catch (NumberFormatException e) {
-                orders = List.of(); // Return an empty list if the input is not a valid number
+                orders = List.of();
             }
         }
 
-        grid.setItems(orders); // Update the grid with filtered or all orders
+        grid.setItems(orders); 
     }
 
+    /**
+     * Navigates to the Add Order form.
+     */
     private void navigateToAddOrder() {
-        getUI().ifPresent(ui -> ui.navigate("add-order-form")); // Navigate to Add Order form
+        getUI().ifPresent(ui -> ui.navigate("add-order-form"));
     }
 
+    /**
+     * Navigates to the Update Order form.
+     */
     private void navigateToUpdateOrder() {
-        getUI().ifPresent(ui -> ui.navigate("update-order-form")); // Navigate to the order form for updates
+        getUI().ifPresent(ui -> ui.navigate("update-order-form"));
     }
-    
+
+    /**
+     * Navigates to the Delete Order form.
+     */
     private void navigateToDeleteOrder() {
-    	getUI().ifPresent(ui -> ui.navigate("delete-order-form"));
+        getUI().ifPresent(ui -> ui.navigate("delete-order-form"));
     }
 }

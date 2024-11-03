@@ -142,18 +142,14 @@ public class OrderServiceImpl implements OrderService {
 	@Transactional
 	public void updateOrder(Integer orderId, Order updatedOrder, String restaurantName, Integer foodPreparationTime,
 			Integer deliveryTime, float customerRating) {
-		// Fetch the existing order entity by orderId
 		OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
 		if (orderEntity == null) {
 			throw new IllegalArgumentException("Order not found for ID: " + orderId);
 		}
 
-		// Update order fields from the updatedOrder object
 		orderEntity.setCostOfOrder(updatedOrder.getCostOfOrder());
 		orderEntity.setDayOfTheWeek(updatedOrder.getDayOfTheWeek());
-		// Update any additional fields from updatedOrder as necessary
 
-		// Update restaurant details
 		RestaurantEntity restaurantEntity = orderEntity.getRestaurant();
 		if (restaurantEntity != null) {
 			restaurantEntity.setRestaurantName(restaurantName);
@@ -161,13 +157,11 @@ public class OrderServiceImpl implements OrderService {
 			restaurantEntity.setDeliveryTime(deliveryTime);
 		}
 
-		// Update customer rating
 		CustomerEntity customerEntity = orderEntity.getCustomer();
 		if (customerEntity != null) {
 			customerEntity.setRating(customerRating);
 		}
 
-		// Save the updated entities
 		orderRepository.save(orderEntity);
 		if (restaurantEntity != null) {
 			restaurantRepository.save(restaurantEntity);

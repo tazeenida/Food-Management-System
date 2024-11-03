@@ -14,6 +14,12 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * A view for adding and updating orders in the Food Management System.
+ * This class provides a user interface form to input order details such as 
+ * cost, day of the week, restaurant name, food preparation time, delivery time, 
+ * and customer rating. It utilizes Vaadin components for the layout and interactivity.
+ */
 @PermitAll
 @Route(value = "add-order-form")
 @PageTitle("Order Form | Food Management System")
@@ -21,16 +27,22 @@ public class AddOrderFormView extends VerticalLayout {
 
     private final OrderService orderService;
 
-    private TextField orderIdField;
-    private TextField costOfOrderField;
-    private ComboBox<String> dayOfTheWeekField;
-    private TextField restaurantNameField;
-    private IntegerField foodPreparationTimeField;
-    private IntegerField deliveryTimeField;
-    private TextField customerRatingField;
-    private Button addOrderButton;
-    private Button updateOrderButton;
+    private TextField orderIdField;            
+    private TextField costOfOrderField;        
+    private ComboBox<String> dayOfTheWeekField; 
+    private TextField restaurantNameField;     
+    private IntegerField foodPreparationTimeField; 
+    private IntegerField deliveryTimeField;    
+    private TextField customerRatingField;     
+    private Button addOrderButton;              
+    private Button updateOrderButton;           
 
+    /**
+     * Constructs an instance of AddOrderFormView.
+     * Initializes the UI components and sets up the layout.
+     *
+     * @param orderService the service used to manage orders
+     */
     @Autowired
     public AddOrderFormView(OrderService orderService) {
         this.orderService = orderService;
@@ -56,8 +68,12 @@ public class AddOrderFormView extends VerticalLayout {
         add(formLayout);
     }
 
+    /**
+     * Adds a new order using the input fields' values.
+     * Validates the fields and shows notifications based on the operation's success or failure.
+     */
     private void addOrder() {
-        if (validateFields(false)) { // Pass 'false' to skip orderIdField validation
+        if (validateFields(false)) { 
             try {
                 Order order = new Order();
                 order.setCostOfOrder(Float.parseFloat(costOfOrderField.getValue()));
@@ -78,14 +94,18 @@ public class AddOrderFormView extends VerticalLayout {
         }
     }
 
+    /**
+     * Validates the input fields for the order form.
+     *
+     * @param isUpdate a boolean indicating whether the validation is for an update operation
+     * @return true if all fields are valid, false otherwise
+     */
     private boolean validateFields(boolean isUpdate) {
         try {
-            // Only validate orderIdField if updating an order
             if (isUpdate && !orderIdField.getValue().isEmpty()) {
                 Integer.parseInt(orderIdField.getValue());
             }
 
-            // Validate Integer fields
             if (foodPreparationTimeField.getValue() == null) {
                 throw new NumberFormatException("Food Preparation Time is required.");
             }
@@ -93,7 +113,6 @@ public class AddOrderFormView extends VerticalLayout {
                 throw new NumberFormatException("Delivery Time is required.");
             }
 
-            // Validate Float fields
             if (!costOfOrderField.getValue().isEmpty()) {
                 Float.parseFloat(costOfOrderField.getValue());
             }
@@ -111,6 +130,9 @@ public class AddOrderFormView extends VerticalLayout {
         }
     }
 
+    /**
+     * Clears all input fields in the form.
+     */
     private void clearFields() {
         orderIdField.clear();
         costOfOrderField.clear();
