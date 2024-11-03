@@ -15,9 +15,9 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @PermitAll
-@Route(value = "update-order-form")
-@PageTitle("Update Order Form | Food Management System")
-public class UpdateOrderFormView extends VerticalLayout {
+@Route(value = "add-order-form")
+@PageTitle("Order Form | Food Management System")
+public class AddOrderFormView extends VerticalLayout {
 
     private final OrderService orderService;
 
@@ -32,10 +32,9 @@ public class UpdateOrderFormView extends VerticalLayout {
     private Button updateOrderButton;
 
     @Autowired
-    public UpdateOrderFormView(OrderService orderService) {
+    public AddOrderFormView(OrderService orderService) {
         this.orderService = orderService;
 
-        // Create UI components
         orderIdField = new TextField("Order ID (for update)");
         orderIdField.setEnabled(false);
         costOfOrderField = new TextField("Cost of Order");
@@ -46,39 +45,35 @@ public class UpdateOrderFormView extends VerticalLayout {
         deliveryTimeField = new IntegerField("Delivery Time (minutes)");
         customerRatingField = new TextField("Customer Rating");
 
-           updateOrderButton = new Button("Update Order", event -> {
-            orderIdField.setEnabled(true);
-            updateOrder();
-        });
+        addOrderButton = new Button("Add Order", event -> addOrder());
         Button backButton = new Button("Back to Orders", e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
 
         FormLayout formLayout = new FormLayout();
         formLayout.add(orderIdField, costOfOrderField, dayOfTheWeekField, restaurantNameField,
                        foodPreparationTimeField, deliveryTimeField, customerRatingField,
-                        updateOrderButton, backButton);
+                       addOrderButton, backButton);
 
         add(formLayout);
     }
 
-    private void updateOrder() {
-        if (validateFields(true)) {
+    private void addOrder() {
+        if (validateFields(false)) { // Pass 'false' to skip orderIdField validation
             try {
-                Integer orderId = Integer.parseInt(orderIdField.getValue());
-                Order updatedOrder = new Order();
-                updatedOrder.setCostOfOrder(Float.parseFloat(costOfOrderField.getValue()));
-                updatedOrder.setDayOfTheWeek(dayOfTheWeekField.getValue());
+                Order order = new Order();
+                order.setCostOfOrder(Float.parseFloat(costOfOrderField.getValue()));
+                order.setDayOfTheWeek(dayOfTheWeekField.getValue());
 
                 String restaurantName = restaurantNameField.getValue();
                 Integer foodPreparationTime = foodPreparationTimeField.getValue();
                 Integer deliveryTime = deliveryTimeField.getValue();
                 float customerRating = Float.parseFloat(customerRatingField.getValue());
 
-                orderService.updateOrder(orderId, updatedOrder, restaurantName, foodPreparationTime, deliveryTime, customerRating);
-                Notification.show("Order updated successfully!");
+                orderService.addOrder(order, restaurantName, foodPreparationTime, deliveryTime, customerRating);
+                Notification.show("Order added successfully!");
                 clearFields();
                 getUI().ifPresent(ui -> ui.navigate(OrderListView.class));
             } catch (Exception e) {
-                Notification.show("Error updating order: " + e.getMessage());
+                Notification.show("Error adding order: " + e.getMessage());
             }
         }
     }

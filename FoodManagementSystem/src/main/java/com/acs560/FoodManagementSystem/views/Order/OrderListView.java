@@ -133,10 +133,10 @@ public class OrderListView extends VerticalLayout {
     }
 
     private void navigateToAddOrder() {
-        getUI().ifPresent(ui -> ui.navigate("order-form")); // Navigate to Add Order form
+        getUI().ifPresent(ui -> ui.navigate("add-order-form")); // Navigate to Add Order form
     }
 
     private void navigateToUpdateOrder() {
-        getUI().ifPresent(ui -> ui.navigate("order-form")); // Navigate to the order form for updates
+        getUI().ifPresent(ui -> ui.navigate("update-order-form")); // Navigate to the order form for updates
     }
 }
