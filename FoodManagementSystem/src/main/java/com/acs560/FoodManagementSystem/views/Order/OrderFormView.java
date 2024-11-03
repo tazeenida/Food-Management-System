@@ -37,6 +37,7 @@ public class OrderFormView extends VerticalLayout {
 
         // Create UI components
         orderIdField = new TextField("Order ID (for update)");
+        orderIdField.setEnabled(false);
         costOfOrderField = new TextField("Cost of Order");
         dayOfTheWeekField = new TextField("Day of the Week");
         restaurantNameField = new TextField("Restaurant Name");
@@ -45,7 +46,10 @@ public class OrderFormView extends VerticalLayout {
         customerRatingField = new TextField("Customer Rating");
 
         addOrderButton = new Button("Add Order", event -> addOrder());
-        updateOrderButton = new Button("Update Order", event -> updateOrder());
+        updateOrderButton = new Button("Update Order", event -> {
+            orderIdField.setEnabled(true);
+            updateOrder();
+        });
         Button backButton = new Button("Back to Orders", e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
 
         FormLayout formLayout = new FormLayout();
@@ -70,6 +74,7 @@ public class OrderFormView extends VerticalLayout {
             orderService.addOrder(order, restaurantName, foodPreparationTime, deliveryTime, customerRating);
             Notification.show("Order added successfully!");
             clearFields();
+            getUI().ifPresent(ui -> ui.navigate(OrderListView.class));
         } catch (NumberFormatException e) {
             Notification.show("Please enter valid numeric values for Cost of Order and Customer Rating.");
         } catch (Exception e) {
@@ -92,6 +97,7 @@ public class OrderFormView extends VerticalLayout {
             orderService.updateOrder(orderId, updatedOrder, restaurantName, foodPreparationTime, deliveryTime, customerRating);
             Notification.show("Order updated successfully!");
             clearFields();
+            getUI().ifPresent(ui -> ui.navigate(OrderListView.class));
         } catch (NumberFormatException e) {
             Notification.show("Please enter valid numeric values for Cost of Order, Customer Rating, and Order ID.");
         } catch (IllegalArgumentException e) {
