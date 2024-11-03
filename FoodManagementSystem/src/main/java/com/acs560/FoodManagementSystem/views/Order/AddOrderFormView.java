@@ -43,7 +43,7 @@ public class AddOrderFormView extends VerticalLayout {
         restaurantNameField = new TextField("Restaurant Name");
         foodPreparationTimeField = new IntegerField("Food Preparation Time (minutes)");
         deliveryTimeField = new IntegerField("Delivery Time (minutes)");
-        customerRatingField = new TextField("Customer Rating");
+        customerRatingField = new TextField("Customer Rating (0-5)");
 
         addOrderButton = new Button("Add Order", event -> addOrder());
         Button backButton = new Button("Back to Orders", e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
@@ -98,7 +98,10 @@ public class AddOrderFormView extends VerticalLayout {
                 Float.parseFloat(costOfOrderField.getValue());
             }
             if (!customerRatingField.getValue().isEmpty()) {
-                Float.parseFloat(customerRatingField.getValue());
+                float rating = Float.parseFloat(customerRatingField.getValue());
+                if (rating < 0 || rating > 5) {
+                    throw new NumberFormatException("Customer Rating must be between 0 and 5.");
+                }
             }
 
             return true;

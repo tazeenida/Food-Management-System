@@ -68,14 +68,12 @@ public class MainLayout extends AppLayout {
      * Includes links to the order, customer, and restaurant views.
      */
     private void createDrawer() {
-        // Create navigation links
-        RouterLink orderLink = new RouterLink("", OrderListView.class);
+        RouterLink orderLink = new RouterLink("Orders", OrderListView.class);
         orderLink.setHighlightCondition(HighlightConditions.sameLocation());
         
         RouterLink customerLink = new RouterLink("Customers", CustomerListView.class);
         RouterLink restaurantLink = new RouterLink("Restaurants", RestaurantListView.class);
         
-        // Add links to the drawer
         addToDrawer(new VerticalLayout(orderLink, customerLink, restaurantLink));
     }
 }
