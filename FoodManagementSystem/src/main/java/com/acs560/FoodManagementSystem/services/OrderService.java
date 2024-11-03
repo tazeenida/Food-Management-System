@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.acs560.FoodManagementSystem.entities.OrderEntity;
+import com.acs560.FoodManagementSystem.models.Order;
 
 /**
  * Service interface for managing order-related operations.
@@ -62,5 +63,9 @@ public interface OrderService {
      * @return a list of {@link OrderEntity} objects associated with the specified restaurant
      */
     List<OrderEntity> getByRestaurant_RestaurantId(Integer restaurantId);
+    
+    void addOrder(Order order, String restaurantName, Integer foodPreparationTime, Integer deliveryTime, float customerRating);
+    public void updateOrder(Integer orderId, Order updatedOrder, String restaurantName, Integer foodPreparationTime, Integer deliveryTime, float customerRating);
+
     
 }

@@ -7,9 +7,16 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.acs560.FoodManagementSystem.entities.CustomerEntity;
 import com.acs560.FoodManagementSystem.entities.OrderEntity;
+import com.acs560.FoodManagementSystem.entities.RestaurantEntity;
+import com.acs560.FoodManagementSystem.models.Order;
+import com.acs560.FoodManagementSystem.repositories.CustomerRepository;
 import com.acs560.FoodManagementSystem.repositories.OrderRepository;
+import com.acs560.FoodManagementSystem.repositories.RestaurantRepository;
 import com.acs560.FoodManagementSystem.services.OrderService;
+
+import jakarta.transaction.Transactional;
 
 /**
  * Implementation of the {@link OrderService} interface for managing order-related operations.
@@ -23,6 +30,10 @@ import com.acs560.FoodManagementSystem.services.OrderService;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    @Autowired
+    private RestaurantRepository restaurantRepository; 
+    @Autowired
+    private CustomerRepository customerRepository; 
 
     /**
      * Constructs a new instance of {@link OrderServiceImpl}.
@@ -102,6 +113,66 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderEntity> getByRestaurant_RestaurantId(Integer restaurantId) {
         return orderRepository.findByRestaurant_RestaurantId(restaurantId);
     }
+    
+    
+    @Transactional
+    public void addOrder(Order order, String restaurantName, Integer foodPreparationTime, Integer deliveryTime, float customerRating) {
+        CustomerEntity customerEntity = new CustomerEntity();
+        customerEntity.setRating(customerRating);
+        CustomerEntity savedCustomer = customerRepository.save(customerEntity);
+
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setRestaurantName(restaurantName);
+        restaurantEntity.setFoodPreparationTime(foodPreparationTime);
+        restaurantEntity.setDeliveryTime(deliveryTime);
+        RestaurantEntity savedRestaurant = restaurantRepository.save(restaurantEntity);
+
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setCostOfOrder(order.getCostOfOrder());
+        orderEntity.setDayOfTheWeek(order.getDayOfTheWeek());
+        orderEntity.setCustomer(savedCustomer);
+        orderEntity.setRestaurant(savedRestaurant);
+
+        orderRepository.save(orderEntity);
+    }
+    
+    @Transactional
+    public void updateOrder(Integer orderId, Order updatedOrder, String restaurantName, Integer foodPreparationTime, Integer deliveryTime, float customerRating) {
+        // Fetch the existing order entity by orderId
+        OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
+        if (orderEntity == null) {
+            throw new IllegalArgumentException("Order not found for ID: " + orderId);
+        }
+
+        // Update order fields from the updatedOrder object
+        orderEntity.setCostOfOrder(updatedOrder.getCostOfOrder());
+        orderEntity.setDayOfTheWeek(updatedOrder.getDayOfTheWeek());
+        // Update any additional fields from updatedOrder as necessary
+
+        // Update restaurant details
+        RestaurantEntity restaurantEntity = orderEntity.getRestaurant();
+        if (restaurantEntity != null) {
+            restaurantEntity.setRestaurantName(restaurantName);
+            restaurantEntity.setFoodPreparationTime(foodPreparationTime);
+            restaurantEntity.setDeliveryTime(deliveryTime);
+        }
+
+        // Update customer rating
+        CustomerEntity customerEntity = orderEntity.getCustomer();
+        if (customerEntity != null) {
+            customerEntity.setRating(customerRating);
+        }
+
+        // Save the updated entities
+        orderRepository.save(orderEntity);
+        if (restaurantEntity != null) {
+            restaurantRepository.save(restaurantEntity);
+        }
+        if (customerEntity != null) {
+            customerRepository.save(customerEntity);
+        }
+    }
+
 
     
 }

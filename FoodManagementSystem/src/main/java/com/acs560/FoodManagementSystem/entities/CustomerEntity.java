@@ -18,11 +18,11 @@ public class CustomerEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Integer customerId;
 
     /**
      * Customer's rating based on feedback or performance.
      */
+    @NotNull
     private float rating;
 }
