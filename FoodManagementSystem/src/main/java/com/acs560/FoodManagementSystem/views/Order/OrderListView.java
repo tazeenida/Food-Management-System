@@ -39,6 +39,7 @@ public class OrderListView extends VerticalLayout {
     private final TextField filterText;
     private final Button addOrderButton;
     private final Button updateOrderButton;
+    private final Button deleteOrderButton;
 
     /**
      * Constructs a new instance of {@link OrderListView}.
@@ -56,8 +57,9 @@ public class OrderListView extends VerticalLayout {
         filterText = createFilter();
         addOrderButton = new Button("Add Order", event -> navigateToAddOrder());
         updateOrderButton = new Button("Update Order", event -> navigateToUpdateOrder());
+        deleteOrderButton = new Button("Delete Order", event -> navigateToDeleteOrder());
 
-        add(createToolbar(filterText, addOrderButton, updateOrderButton), grid);
+        add(createToolbar(filterText, addOrderButton, updateOrderButton, deleteOrderButton), grid);
         updateGrid(); // Load initial order data
     }
 
@@ -104,8 +106,8 @@ public class OrderListView extends VerticalLayout {
      * @param updateOrderButton the button for updating existing orders
      * @return a {@link HorizontalLayout} containing the toolbar components
      */
-    private Component createToolbar(TextField filterText, Button addOrderButton, Button updateOrderButton) {
-        var toolbar = new HorizontalLayout(filterText, addOrderButton, updateOrderButton);
+    private Component createToolbar(TextField filterText, Button addOrderButton, Button updateOrderButton, Button deleteOrderButton) {
+        var toolbar = new HorizontalLayout(filterText, addOrderButton, updateOrderButton, deleteOrderButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
@@ -138,5 +140,9 @@ public class OrderListView extends VerticalLayout {
 
     private void navigateToUpdateOrder() {
         getUI().ifPresent(ui -> ui.navigate("update-order-form")); // Navigate to the order form for updates
+    }
+    
+    private void navigateToDeleteOrder() {
+    	getUI().ifPresent(ui -> ui.navigate("delete-order-form"));
     }
 }
