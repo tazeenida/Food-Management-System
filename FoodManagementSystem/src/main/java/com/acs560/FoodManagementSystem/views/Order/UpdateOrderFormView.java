@@ -45,7 +45,7 @@ public class UpdateOrderFormView extends VerticalLayout {
         this.orderService = orderService;
 
         orderIdField = new TextField("Order ID (for update)");
-        orderIdField.setEnabled(false);
+        orderIdField.setEnabled(true);
         costOfOrderField = new TextField("Cost of Order");
         dayOfTheWeekField = new ComboBox<>("Day of the Week");
         dayOfTheWeekField.setItems("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
