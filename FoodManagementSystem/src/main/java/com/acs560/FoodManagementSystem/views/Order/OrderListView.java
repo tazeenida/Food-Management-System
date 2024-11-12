@@ -37,6 +37,8 @@ public class OrderListView extends VerticalLayout {
     private final OrderService orderService;
     private final Grid<OrderEntity> grid;
     private final TextField filterText;
+    private final TextField minRatingField;
+    private final TextField maxRatingField;
     private final Button addOrderButton;
     private final Button updateOrderButton;
     private final Button deleteOrderButton;
@@ -55,11 +57,13 @@ public class OrderListView extends VerticalLayout {
 
         grid = createGrid();
         filterText = createFilter();
+        minRatingField = createMinRatingFilter(); // Create min rating filter
+        maxRatingField = createMaxRatingFilter(); // Create max rating filter
         addOrderButton = new Button("Add Order", event -> navigateToAddOrder());
         updateOrderButton = new Button("Update Order", event -> navigateToUpdateOrder());
         deleteOrderButton = new Button("Delete Order", event -> navigateToDeleteOrder());
 
-        add(createToolbar(filterText, addOrderButton, updateOrderButton, deleteOrderButton), grid);
+        add(createToolbar(filterText, minRatingField, maxRatingField, addOrderButton, updateOrderButton, deleteOrderButton), grid);
         updateGrid(); 
     }
 
@@ -98,36 +102,84 @@ public class OrderListView extends VerticalLayout {
     }
 
     /**
+     * Creates a text field for filtering orders based on the minimum customer rating.
+     *
+     * @return a configured {@link TextField} instance for min rating filtering
+     */
+    private TextField createMinRatingFilter() {
+        TextField minRatingField = new TextField();
+        minRatingField.setValueChangeTimeout(1000);
+        minRatingField.setPlaceholder("Min rating...");
+        minRatingField.setClearButtonVisible(true);
+        minRatingField.setValueChangeMode(ValueChangeMode.LAZY);
+        minRatingField.addValueChangeListener(e -> updateGrid());
+
+        return minRatingField;
+    }
+
+    /**
+     * Creates a text field for filtering orders based on the maximum customer rating.
+     *
+     * @return a configured {@link TextField} instance for max rating filtering
+     */
+    private TextField createMaxRatingFilter() {
+        TextField maxRatingField = new TextField();
+        maxRatingField.setValueChangeTimeout(1000);
+        maxRatingField.setPlaceholder("Max rating...");
+        maxRatingField.setClearButtonVisible(true);
+        maxRatingField.setValueChangeMode(ValueChangeMode.LAZY);
+        maxRatingField.addValueChangeListener(e -> updateGrid());
+
+        return maxRatingField;
+    }
+
+    /**
      * Creates a toolbar containing the filter text field and action buttons.
      *
-     * @param filterText the text field used for filtering orders
+     * @param filterText the text field used for filtering orders by ID
+     * @param minRatingField the text field used for filtering by minimum rating
+     * @param maxRatingField the text field used for filtering by maximum rating
      * @param addOrderButton the button for adding new orders
      * @param updateOrderButton the button for updating existing orders
      * @param deleteOrderButton the button for deleting orders
      * @return a {@link HorizontalLayout} containing the toolbar components
      */
-    private Component createToolbar(TextField filterText, Button addOrderButton, Button updateOrderButton, Button deleteOrderButton) {
-        var toolbar = new HorizontalLayout(filterText, addOrderButton, updateOrderButton, deleteOrderButton);
+    private Component createToolbar(TextField filterText, TextField minRatingField, TextField maxRatingField,
+                                    Button addOrderButton, Button updateOrderButton, Button deleteOrderButton) {
+        var toolbar = new HorizontalLayout(filterText, minRatingField, maxRatingField, addOrderButton, updateOrderButton, deleteOrderButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
     /**
-     * Updates the grid with orders based on the current filter text.
+     * Updates the grid with orders based on the current filter text and rating range.
      * It retrieves orders from the {@link OrderService} and sets them in the grid.
      */
     private void updateGrid() {
         String filter = filterText.getValue();
+        String minRating = minRatingField.getValue();
+        String maxRating = maxRatingField.getValue();
         List<OrderEntity> orders;
 
         if (filter == null || filter.isEmpty()) {
-            orders = orderService.getAll(); 
+            orders = orderService.getAll();
         } else {
             try {
                 Integer orderId = Integer.parseInt(filter); 
                 Optional<OrderEntity> orderOpt = orderService.getByOrderId(orderId);
                 orders = orderOpt.map(List::of).orElseGet(List::of); 
             } catch (NumberFormatException e) {
+                orders = List.of();
+            }
+        }
+
+        if ((minRating != null && !minRating.isEmpty()) && (maxRating != null && !maxRating.isEmpty())) {
+            try {
+                float min = Float.parseFloat(minRating);
+                float max = Float.parseFloat(maxRating);
+                orders = orderService.getByCustomerRatingRange(min, max);
+            } catch (NumberFormatException e) {
+                Notification.show("Invalid rating range.");
                 orders = List.of();
             }
         }
