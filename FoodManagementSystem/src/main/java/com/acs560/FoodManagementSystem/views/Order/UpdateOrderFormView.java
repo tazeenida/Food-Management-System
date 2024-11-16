@@ -15,132 +15,112 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * The {@link UpdateOrderFormView} class provides a user interface for updating an existing order.
- * It extends {@link VerticalLayout} and includes various fields to input order details.
+ * The {@link UpdateOrderFormView} class provides a user interface for updating
+ * an existing order. It extends {@link VerticalLayout} and includes various
+ * fields to input order details.
  */
 @PermitAll
 @Route(value = "update-order-form")
 @PageTitle("Update Order Form | Food Management System")
 public class UpdateOrderFormView extends VerticalLayout {
 
-    private final OrderService orderService;
+	private final OrderService orderService;
 
-    private TextField orderIdField;
-    private TextField costOfOrderField;
-    private ComboBox<String> dayOfTheWeekField;
-    private TextField restaurantNameField;
-    private IntegerField foodPreparationTimeField;
-    private IntegerField deliveryTimeField;
-    private TextField customerRatingField;
-    private Button updateOrderButton;
+	private TextField orderIdField;
+	private TextField costOfOrderField;
+	private ComboBox<String> dayOfTheWeekField;
+	private TextField restaurantNameField;
+	private IntegerField foodPreparationTimeField;
+	private IntegerField deliveryTimeField;
+	private TextField customerRatingField;
+	private Button updateOrderButton;
 
-    /**
-     * Constructs a new instance of {@link UpdateOrderFormView}.
-     * Initializes the form fields and the order service.
-     *
-     * @param orderService the service used to manage order data
-     */
-    @Autowired
-    public UpdateOrderFormView(OrderService orderService) {
-        this.orderService = orderService;
+	@Autowired
+	public UpdateOrderFormView(OrderService orderService) {
+		this.orderService = orderService;
 
-        orderIdField = new TextField("Order ID (for update)");
-        orderIdField.setEnabled(true);
-        costOfOrderField = new TextField("Cost of Order");
-        dayOfTheWeekField = new ComboBox<>("Day of the Week");
-        dayOfTheWeekField.setItems("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-        restaurantNameField = new TextField("Restaurant Name");
-        foodPreparationTimeField = new IntegerField("Food Preparation Time (minutes)");
-        deliveryTimeField = new IntegerField("Delivery Time (minutes)");
-        customerRatingField = new TextField("Customer Rating (0-5)");
+		// Initializing the fields
+		orderIdField = new TextField("Order ID (for update)");
+		orderIdField.setEnabled(true);
+		costOfOrderField = new TextField("Cost of Order");
+		dayOfTheWeekField = new ComboBox<>("Day of the Week");
+		dayOfTheWeekField.setItems("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+		restaurantNameField = new TextField("Restaurant Name");
+		foodPreparationTimeField = new IntegerField("Food Preparation Time (minutes)");
+		deliveryTimeField = new IntegerField("Delivery Time (minutes)");
+		customerRatingField = new TextField("Customer Rating (0-5)");
 
-        updateOrderButton = new Button("Update Order", event -> {
-            orderIdField.setEnabled(true);
-            updateOrder();
-        });
-        Button backButton = new Button("Back to Orders", e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
+		// Button to trigger the update
+		updateOrderButton = new Button("Update Order", event -> updateOrder());
+		Button backButton = new Button("Back to Orders",
+				e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
 
-        FormLayout formLayout = new FormLayout();
-        formLayout.add(orderIdField, costOfOrderField, dayOfTheWeekField, restaurantNameField,
-                       foodPreparationTimeField, deliveryTimeField, customerRatingField,
-                       updateOrderButton, backButton);
+		// Layout
+		FormLayout formLayout = new FormLayout();
+		formLayout.add(orderIdField, costOfOrderField, dayOfTheWeekField, restaurantNameField, foodPreparationTimeField,
+				deliveryTimeField, customerRatingField, updateOrderButton, backButton);
 
-        add(formLayout);  
-    }
+		add(formLayout);
+	}
 
-    /**
-     * Updates the order with the data provided in the form fields.
-     * Displays a notification upon success or failure of the update operation.
-     */
-    private void updateOrder() {
-        if (validateFields(true)) {
-            try {
-                Integer orderId = Integer.parseInt(orderIdField.getValue());
-                Order updatedOrder = new Order();
-                updatedOrder.setCostOfOrder(Float.parseFloat(costOfOrderField.getValue()));
-                updatedOrder.setDayOfTheWeek(dayOfTheWeekField.getValue());
+	private void updateOrder() {
+		if (validateFields(true)) {
+			try {
+				Integer orderId = Integer.parseInt(orderIdField.getValue());
+				Order updatedOrder = new Order();
 
-                String restaurantName = restaurantNameField.getValue();
-                Integer foodPreparationTime = foodPreparationTimeField.getValue();
-                Integer deliveryTime = deliveryTimeField.getValue();
-                float customerRating = Float.parseFloat(customerRatingField.getValue());
+				// Optional fields with default handling
+				String costOfOrderValue = costOfOrderField.getValue();
+				if (!costOfOrderValue.isEmpty()) {
+					updatedOrder.setCostOfOrder(Float.parseFloat(costOfOrderValue));
+				}
 
-                orderService.updateOrder(orderId, updatedOrder, restaurantName, foodPreparationTime, deliveryTime, customerRating);
-                Notification.show("Order updated successfully!");
-                clearFields(); 
-                getUI().ifPresent(ui -> ui.navigate(OrderListView.class)); 
-            } catch (Exception e) {
-                Notification.show("Error updating order: " + e.getMessage());
-            }
-        }
-    }
+				String dayOfTheWeekValue = dayOfTheWeekField.getValue();
+				if (dayOfTheWeekValue != null && !dayOfTheWeekValue.isEmpty()) {
+					updatedOrder.setDayOfTheWeek(dayOfTheWeekValue);
+				}
 
-    /**
-     * Validates the input fields to ensure that they contain valid data.
-     *
-     * @param isUpdate boolean flag indicating if the update process is in progress
-     * @return true if all fields are valid; false otherwise
-     */
-    private boolean validateFields(boolean isUpdate) {
-        try {
-            if (isUpdate && !orderIdField.getValue().isEmpty()) {
-                Integer.parseInt(orderIdField.getValue());
-            }
+				String restaurantName = restaurantNameField.getValue();
+				Integer foodPreparationTime = foodPreparationTimeField.getValue();
+				Integer deliveryTime = deliveryTimeField.getValue();
+				String customerRatingValue = customerRatingField.getValue();
 
-            if (foodPreparationTimeField.getValue() == null) {
-                throw new NumberFormatException("Food Preparation Time is required.");
-            }
-            if (deliveryTimeField.getValue() == null) {
-                throw new NumberFormatException("Delivery Time is required.");
-            }
+				// Check if customerRating is provided (not null or empty)
+				Float customerRating = null;
+				if (customerRatingValue != null && !customerRatingValue.isEmpty()) {
+					customerRating = Float.parseFloat(customerRatingValue);
+				}
 
-            if (!costOfOrderField.getValue().isEmpty()) {
-                Float.parseFloat(costOfOrderField.getValue());
-            }
-            if (!customerRatingField.getValue().isEmpty()) {
-                float rating = Float.parseFloat(customerRatingField.getValue());
-                if (rating < 0 || rating > 5) {
-                    throw new NumberFormatException("Customer Rating must be between 0 and 5.");
-                }
-            }
+				orderService.updateOrder(orderId, updatedOrder, restaurantName, foodPreparationTime, deliveryTime,
+						customerRating);
+				Notification.show("Order updated successfully!");
+				clearFields();
+				getUI().ifPresent(ui -> ui.navigate(OrderListView.class));
+			} catch (Exception e) {
+				Notification.show("Error updating order: " + e.getMessage());
+			}
+		}
+	}
 
-            return true;
-        } catch (NumberFormatException e) {
-            Notification.show("Please ensure fields have valid numeric values: " + e.getMessage());
-            return false;
-        }
-    }
+	private boolean validateFields(boolean isUpdate) {
+		try {
+			if (isUpdate && !orderIdField.getValue().isEmpty()) {
+				Integer.parseInt(orderIdField.getValue());
+			}
+			return true;
+		} catch (NumberFormatException e) {
+			Notification.show("Please ensure fields have valid numeric values: " + e.getMessage());
+			return false;
+		}
+	}
 
-    /**
-     * Clears all the input fields in the form.
-     */
-    private void clearFields() {
-        orderIdField.clear();
-        costOfOrderField.clear();
-        dayOfTheWeekField.clear();
-        restaurantNameField.clear();
-        foodPreparationTimeField.clear();
-        deliveryTimeField.clear();
-        customerRatingField.clear();
-    }
+	private void clearFields() {
+		orderIdField.clear();
+		costOfOrderField.clear();
+		dayOfTheWeekField.clear();
+		restaurantNameField.clear();
+		foodPreparationTimeField.clear();
+		deliveryTimeField.clear();
+		customerRatingField.clear();
+	}
 }

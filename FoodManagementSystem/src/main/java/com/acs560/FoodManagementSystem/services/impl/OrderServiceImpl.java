@@ -141,35 +141,54 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional
 	public void updateOrder(Integer orderId, Order updatedOrder, String restaurantName, Integer foodPreparationTime,
-			Integer deliveryTime, float customerRating) {
-		OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
-		if (orderEntity == null) {
-			throw new IllegalArgumentException("Order not found for ID: " + orderId);
-		}
+	                        Integer deliveryTime, Float customerRating) {
+	    OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
+	    if (orderEntity == null) {
+	        throw new IllegalArgumentException("Order not found for ID: " + orderId);
+	    }
 
-		orderEntity.setCostOfOrder(updatedOrder.getCostOfOrder());
-		orderEntity.setDayOfTheWeek(updatedOrder.getDayOfTheWeek());
+	    // Update cost of order if provided (handling null values)
+	    if (updatedOrder.getCostOfOrder() > 0) {
+	        orderEntity.setCostOfOrder(updatedOrder.getCostOfOrder());
+	    }
 
-		RestaurantEntity restaurantEntity = orderEntity.getRestaurant();
-		if (restaurantEntity != null) {
-			restaurantEntity.setRestaurantName(restaurantName);
-			restaurantEntity.setFoodPreparationTime(foodPreparationTime);
-			restaurantEntity.setDeliveryTime(deliveryTime);
-		}
+	    // Update day of the week if provided
+	    if (updatedOrder.getDayOfTheWeek() != null) {
+	        orderEntity.setDayOfTheWeek(updatedOrder.getDayOfTheWeek());
+	    }
 
-		CustomerEntity customerEntity = orderEntity.getCustomer();
-		if (customerEntity != null) {
-			customerEntity.setRating(customerRating);
-		}
+	    // Update restaurant details if provided
+	    RestaurantEntity restaurantEntity = orderEntity.getRestaurant();
+	    if (restaurantEntity != null) {
+	        if (restaurantName != null) {
+	            restaurantEntity.setRestaurantName(restaurantName);
+	        }
+	        if (foodPreparationTime != null) {
+	            restaurantEntity.setFoodPreparationTime(foodPreparationTime);
+	        }
+	        if (deliveryTime != null) {
+	            restaurantEntity.setDeliveryTime(deliveryTime);
+	        }
+	    }
 
-		orderRepository.save(orderEntity);
-		if (restaurantEntity != null) {
-			restaurantRepository.save(restaurantEntity);
-		}
-		if (customerEntity != null) {
-			customerRepository.save(customerEntity);
-		}
+	    // Only update customer rating if a non-null value is provided
+	    CustomerEntity customerEntity = orderEntity.getCustomer();
+	    if (customerEntity != null && customerRating != null) {
+	        customerEntity.setRating(customerRating);  // Update only if customerRating is not null
+	    }
+
+	    // Save the updated entities
+	    orderRepository.save(orderEntity);
+	    if (restaurantEntity != null) {
+	        restaurantRepository.save(restaurantEntity);
+	    }
+	    if (customerEntity != null) {
+	        customerRepository.save(customerEntity);
+	    }
 	}
+
+
+
 
 	@Override
 	@Transactional

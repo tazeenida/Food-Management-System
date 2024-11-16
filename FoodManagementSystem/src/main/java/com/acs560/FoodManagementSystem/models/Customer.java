@@ -18,5 +18,5 @@ public class Customer {
      * Rating given to the customer.
      * This could be used for feedback or loyalty points.
      */
-    private float rating;
+    private Float rating;
 }
