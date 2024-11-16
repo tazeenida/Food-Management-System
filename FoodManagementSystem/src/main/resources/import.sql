@@ -46,7 +46,6 @@ INSERT INTO FoodManagementSystem.restaurants (restaurant_id, restaurant_name, fo
 INSERT INTO FoodManagementSystem.restaurants (restaurant_id, restaurant_name, food_preparation_time, delivery_time) VALUES (22, 'Mamma Mia', 20, 24);
 INSERT INTO FoodManagementSystem.restaurants (restaurant_id, restaurant_name, food_preparation_time, delivery_time) VALUES (23, 'Vanessa\'s Dumpling House', 30, 22);
 INSERT INTO FoodManagementSystem.restaurants (restaurant_id, restaurant_name, food_preparation_time, delivery_time) VALUES (24, 'Wild Ginger', 25, 27);
-INSERT INTO FoodManagementSystem.restaurants (restaurant_id, restaurant_name, food_preparation_time, delivery_time) VALUES (24, 'Wild Ginger', 25, 27);
 INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477147, 30.75, 'Saturday', 337525, 1);
 INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477685, 12.08, 'Saturday', 358141, 2);
 INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477070, 12.23, 'Monday', 66393, 3);
