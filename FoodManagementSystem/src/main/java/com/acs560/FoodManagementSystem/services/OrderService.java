@@ -97,14 +97,6 @@ public interface OrderService {
     void delete(Integer orderId);
 
     /**
-     * Retrieves a list of orders where the customer rating is greater than or equal to a specified threshold.
-     *
-     * @param ratingThreshold the minimum customer rating threshold
-     * @return a list of {@link OrderEntity} objects with a customer rating greater than or equal to the specified value
-     */
-    List<OrderEntity> getByCustomerRating(float ratingThreshold);
-
-    /**
      * Retrieves a list of orders where the customer rating falls within a specified range.
      *
      * @param minRating the minimum rating in the range

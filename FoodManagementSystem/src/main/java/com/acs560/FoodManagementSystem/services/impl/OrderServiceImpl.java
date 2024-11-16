@@ -193,11 +193,6 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	@Override
-	public List<OrderEntity> getByCustomerRating(float ratingThreshold) {
-	    return orderRepository.findByCustomer_RatingGreaterThanEqual(ratingThreshold);
-	}
-	
-	@Override
 	public List<OrderEntity> getByCustomerRatingRange(float minRating, float maxRating) {
 	    return orderRepository.findByCustomer_RatingBetween(minRating, maxRating);
 	}

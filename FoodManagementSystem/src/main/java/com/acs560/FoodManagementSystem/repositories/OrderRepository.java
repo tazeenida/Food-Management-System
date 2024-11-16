@@ -54,14 +54,6 @@ public interface OrderRepository extends CrudRepository<OrderEntity, Integer> {
     List<OrderEntity> findByRestaurant_RestaurantId(Integer restaurantId);
 
     /**
-     * Find all orders where the customer rating is greater than or equal to the specified rating.
-     *
-     * @param rating the minimum customer rating threshold
-     * @return a list of {@link OrderEntity} objects with a customer rating greater than or equal to the specified value
-     */
-    List<OrderEntity> findByCustomer_RatingGreaterThanEqual(float rating);
-
-    /**
      * Find all orders where the customer rating falls within a specified range.
      *
      * @param minRating the minimum rating in the range
