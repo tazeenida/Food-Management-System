@@ -87,7 +87,7 @@ public interface OrderService {
      * @param customerRating      the updated customer's rating for the order
      */
     void updateOrder(Integer orderId, Order updatedOrder, String restaurantName, Integer foodPreparationTime,
-                     Integer deliveryTime, float customerRating);
+	        Integer deliveryTime, Float customerRating);
 
     /**
      * Deletes an order from the system by its ID.
@@ -95,14 +95,6 @@ public interface OrderService {
      * @param orderId the ID of the order to delete
      */
     void delete(Integer orderId);
-
-    /**
-     * Retrieves a list of orders where the customer rating is greater than or equal to a specified threshold.
-     *
-     * @param ratingThreshold the minimum customer rating threshold
-     * @return a list of {@link OrderEntity} objects with a customer rating greater than or equal to the specified value
-     */
-    List<OrderEntity> getByCustomerRating(float ratingThreshold);
 
     /**
      * Retrieves a list of orders where the customer rating falls within a specified range.

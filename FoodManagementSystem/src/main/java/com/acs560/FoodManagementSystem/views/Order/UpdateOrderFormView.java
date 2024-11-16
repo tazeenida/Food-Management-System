@@ -15,8 +15,14 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * The {@link UpdateOrderFormView} class provides a user interface for updating an existing order.
- * It extends {@link VerticalLayout} and includes various fields to input order details.
+ * The {@link UpdateOrderFormView} class provides a user interface for updating
+ * an existing order. It allows users to modify order details including cost,
+ * day of the week, restaurant information, preparation time, delivery time, and
+ * customer rating.
+ * <p>
+ * This view includes a form for inputting new values and a button to update the
+ * order. On success, the user is navigated back to the list of orders.
+ * </p>
  */
 @PermitAll
 @Route(value = "update-order-form")
@@ -36,9 +42,8 @@ public class UpdateOrderFormView extends VerticalLayout {
 
     /**
      * Constructs a new instance of {@link UpdateOrderFormView}.
-     * Initializes the form fields and the order service.
-     *
-     * @param orderService the service used to manage order data
+     * 
+     * @param orderService the service used to update order details
      */
     @Autowired
     public UpdateOrderFormView(OrderService orderService) {
@@ -54,41 +59,51 @@ public class UpdateOrderFormView extends VerticalLayout {
         deliveryTimeField = new IntegerField("Delivery Time (minutes)");
         customerRatingField = new TextField("Customer Rating (0-5)");
 
-        updateOrderButton = new Button("Update Order", event -> {
-            orderIdField.setEnabled(true);
-            updateOrder();
-        });
+        updateOrderButton = new Button("Update Order", event -> updateOrder());
         Button backButton = new Button("Back to Orders", e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
 
         FormLayout formLayout = new FormLayout();
-        formLayout.add(orderIdField, costOfOrderField, dayOfTheWeekField, restaurantNameField,
-                       foodPreparationTimeField, deliveryTimeField, customerRatingField,
-                       updateOrderButton, backButton);
+        formLayout.add(orderIdField, costOfOrderField, dayOfTheWeekField, restaurantNameField, foodPreparationTimeField,
+                deliveryTimeField, customerRatingField, updateOrderButton, backButton);
 
-        add(formLayout);  
+        add(formLayout);
     }
 
     /**
-     * Updates the order with the data provided in the form fields.
-     * Displays a notification upon success or failure of the update operation.
+     * Updates the order with the new information provided by the user.
+     * 
+     * @throws NumberFormatException if invalid data is entered
      */
     private void updateOrder() {
         if (validateFields(true)) {
             try {
                 Integer orderId = Integer.parseInt(orderIdField.getValue());
                 Order updatedOrder = new Order();
-                updatedOrder.setCostOfOrder(Float.parseFloat(costOfOrderField.getValue()));
-                updatedOrder.setDayOfTheWeek(dayOfTheWeekField.getValue());
+
+                String costOfOrderValue = costOfOrderField.getValue();
+                if (!costOfOrderValue.isEmpty()) {
+                    updatedOrder.setCostOfOrder(Float.parseFloat(costOfOrderValue));
+                }
+
+                String dayOfTheWeekValue = dayOfTheWeekField.getValue();
+                if (dayOfTheWeekValue != null && !dayOfTheWeekValue.isEmpty()) {
+                    updatedOrder.setDayOfTheWeek(dayOfTheWeekValue);
+                }
 
                 String restaurantName = restaurantNameField.getValue();
                 Integer foodPreparationTime = foodPreparationTimeField.getValue();
                 Integer deliveryTime = deliveryTimeField.getValue();
-                float customerRating = Float.parseFloat(customerRatingField.getValue());
+                String customerRatingValue = customerRatingField.getValue();
+
+                Float customerRating = null;
+                if (customerRatingValue != null && !customerRatingValue.isEmpty()) {
+                    customerRating = Float.parseFloat(customerRatingValue);
+                }
 
                 orderService.updateOrder(orderId, updatedOrder, restaurantName, foodPreparationTime, deliveryTime, customerRating);
                 Notification.show("Order updated successfully!");
-                clearFields(); 
-                getUI().ifPresent(ui -> ui.navigate(OrderListView.class)); 
+                clearFields();
+                getUI().ifPresent(ui -> ui.navigate(OrderListView.class));
             } catch (Exception e) {
                 Notification.show("Error updating order: " + e.getMessage());
             }
@@ -96,34 +111,16 @@ public class UpdateOrderFormView extends VerticalLayout {
     }
 
     /**
-     * Validates the input fields to ensure that they contain valid data.
-     *
-     * @param isUpdate boolean flag indicating if the update process is in progress
-     * @return true if all fields are valid; false otherwise
+     * Validates the order ID field to ensure it contains a valid integer.
+     * 
+     * @param isUpdate whether the operation is an update
+     * @return true if the fields are valid, false otherwise
      */
     private boolean validateFields(boolean isUpdate) {
         try {
             if (isUpdate && !orderIdField.getValue().isEmpty()) {
                 Integer.parseInt(orderIdField.getValue());
             }
-
-            if (foodPreparationTimeField.getValue() == null) {
-                throw new NumberFormatException("Food Preparation Time is required.");
-            }
-            if (deliveryTimeField.getValue() == null) {
-                throw new NumberFormatException("Delivery Time is required.");
-            }
-
-            if (!costOfOrderField.getValue().isEmpty()) {
-                Float.parseFloat(costOfOrderField.getValue());
-            }
-            if (!customerRatingField.getValue().isEmpty()) {
-                float rating = Float.parseFloat(customerRatingField.getValue());
-                if (rating < 0 || rating > 5) {
-                    throw new NumberFormatException("Customer Rating must be between 0 and 5.");
-                }
-            }
-
             return true;
         } catch (NumberFormatException e) {
             Notification.show("Please ensure fields have valid numeric values: " + e.getMessage());
@@ -132,7 +129,7 @@ public class UpdateOrderFormView extends VerticalLayout {
     }
 
     /**
-     * Clears all the input fields in the form.
+     * Clears all input fields in the form.
      */
     private void clearFields() {
         orderIdField.clear();

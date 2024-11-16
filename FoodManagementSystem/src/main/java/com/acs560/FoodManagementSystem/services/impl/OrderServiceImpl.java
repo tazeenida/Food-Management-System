@@ -30,176 +30,218 @@ import jakarta.transaction.Transactional;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-	private final OrderRepository orderRepository;
-	@Autowired
-	private RestaurantRepository restaurantRepository;
-	@Autowired
-	private CustomerRepository customerRepository;
+    private final OrderRepository orderRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final CustomerRepository customerRepository;
 
-	/**
-	 * Constructs a new instance of {@link OrderServiceImpl}.
-	 *
-	 * @param orderRepository the repository used to access order data
-	 */
-	@Autowired
-	public OrderServiceImpl(OrderRepository orderRepository) {
-		this.orderRepository = orderRepository;
-	}
+    /**
+     * Constructs a new instance of {@link OrderServiceImpl}.
+     * 
+     * @param orderRepository the repository used to access order data
+     * @param restaurantRepository the repository used to access restaurant data
+     * @param customerRepository the repository used to access customer data
+     */
+    @Autowired
+    public OrderServiceImpl(OrderRepository orderRepository, RestaurantRepository restaurantRepository, 
+                            CustomerRepository customerRepository) {
+        this.orderRepository = orderRepository;
+        this.restaurantRepository = restaurantRepository;
+        this.customerRepository = customerRepository;
+    }
 
-	/**
-	 * Retrieves a list of all orders.
-	 *
-	 * @return a list of all {@link OrderEntity} objects
-	 */
-	@Override
-	public List<OrderEntity> getAll() {
-		List<OrderEntity> orderList = new ArrayList<>();
-		orderRepository.findAll().forEach(orderList::add);
-		return orderList;
-	}
+    /**
+     * Retrieves a list of all orders.
+     *
+     * @return a list of all {@link OrderEntity} objects
+     */
+    @Override
+    public List<OrderEntity> getAll() {
+        List<OrderEntity> orderList = new ArrayList<>();
+        orderRepository.findAll().forEach(orderList::add);
+        return orderList;
+    }
 
-	/**
-	 * Retrieves an order by its unique order ID.
-	 *
-	 * @param orderId the ID of the order to retrieve
-	 * @return an {@link Optional} containing the {@link OrderEntity} if found, or
-	 *         an empty Optional if not found
-	 */
-	@Override
-	public Optional<OrderEntity> getByOrderId(Integer orderId) {
-		return Optional.ofNullable(orderRepository.findByOrderId(orderId));
-	}
+    /**
+     * Retrieves an order by its unique order ID.
+     *
+     * @param orderId the ID of the order to retrieve
+     * @return an {@link Optional} containing the {@link OrderEntity} if found, or
+     *         an empty Optional if not found
+     */
+    @Override
+    public Optional<OrderEntity> getByOrderId(Integer orderId) {
+        return Optional.ofNullable(orderRepository.findByOrderId(orderId));
+    }
 
-	/**
-	 * Retrieves a list of orders with a specific cost.
-	 *
-	 * @param costOfOrder the cost of the order to filter
-	 * @return a list of {@link OrderEntity} objects matching the specified cost
-	 */
-	@Override
-	public List<OrderEntity> getByCostOfOrder(float costOfOrder) {
-		return orderRepository.findByCostOfOrder(costOfOrder);
-	}
+    /**
+     * Retrieves a list of orders with a specific cost.
+     *
+     * @param costOfOrder the cost of the order to filter
+     * @return a list of {@link OrderEntity} objects matching the specified cost
+     */
+    @Override
+    public List<OrderEntity> getByCostOfOrder(float costOfOrder) {
+        return orderRepository.findByCostOfOrder(costOfOrder);
+    }
 
-	/**
-	 * Retrieves a list of orders made on a specific day of the week.
-	 *
-	 * @param dayOfTheWeek the day of the week to filter orders
-	 * @return a list of {@link OrderEntity} objects matching the specified day of
-	 *         the week
-	 */
-	@Override
-	public List<OrderEntity> getByDayOfTheWeek(String dayOfTheWeek) {
-		return orderRepository.findByDayOfTheWeek(dayOfTheWeek);
-	}
+    /**
+     * Retrieves a list of orders made on a specific day of the week.
+     *
+     * @param dayOfTheWeek the day of the week to filter orders
+     * @return a list of {@link OrderEntity} objects matching the specified day of
+     *         the week
+     */
+    @Override
+    public List<OrderEntity> getByDayOfTheWeek(String dayOfTheWeek) {
+        return orderRepository.findByDayOfTheWeek(dayOfTheWeek);
+    }
 
-	/**
-	 * Retrieves a list of orders placed by a specific customer.
-	 *
-	 * @param customerId the ID of the customer whose orders to retrieve
-	 * @return a list of {@link OrderEntity} objects associated with the specified
-	 *         customer
-	 */
-	@Override
-	public List<OrderEntity> getByCustomer_CustomerId(Integer customerId) {
-		return orderRepository.findByCustomer_CustomerId(customerId);
-	}
+    /**
+     * Retrieves a list of orders placed by a specific customer.
+     *
+     * @param customerId the ID of the customer whose orders to retrieve
+     * @return a list of {@link OrderEntity} objects associated with the specified
+     *         customer
+     */
+    @Override
+    public List<OrderEntity> getByCustomer_CustomerId(Integer customerId) {
+        return orderRepository.findByCustomer_CustomerId(customerId);
+    }
 
-	/**
-	 * Retrieves a list of orders associated with a specific restaurant.
-	 *
-	 * @param restaurantId the ID of the restaurant whose orders to retrieve
-	 * @return a list of {@link OrderEntity} objects associated with the specified
-	 *         restaurant
-	 */
-	@Override
-	public List<OrderEntity> getByRestaurant_RestaurantId(Integer restaurantId) {
-		return orderRepository.findByRestaurant_RestaurantId(restaurantId);
-	}
+    /**
+     * Retrieves a list of orders associated with a specific restaurant.
+     *
+     * @param restaurantId the ID of the restaurant whose orders to retrieve
+     * @return a list of {@link OrderEntity} objects associated with the specified
+     *         restaurant
+     */
+    @Override
+    public List<OrderEntity> getByRestaurant_RestaurantId(Integer restaurantId) {
+        return orderRepository.findByRestaurant_RestaurantId(restaurantId);
+    }
 
-	@Transactional
-	public void addOrder(Order order, String restaurantName, Integer foodPreparationTime, Integer deliveryTime,
-			float customerRating) {
-		CustomerEntity customerEntity = new CustomerEntity();
-		customerEntity.setRating(customerRating);
-		CustomerEntity savedCustomer = customerRepository.save(customerEntity);
+    /**
+     * Adds a new order, including associated customer and restaurant data.
+     *
+     * @param order the order to be added
+     * @param restaurantName the name of the restaurant for the order
+     * @param foodPreparationTime the food preparation time for the order
+     * @param deliveryTime the delivery time for the order
+     * @param customerRating the rating of the customer for the order
+     */
+    @Transactional
+    public void addOrder(Order order, String restaurantName, Integer foodPreparationTime, Integer deliveryTime,
+                         float customerRating) {
+        CustomerEntity customerEntity = new CustomerEntity();
+        customerEntity.setRating(customerRating);
+        CustomerEntity savedCustomer = customerRepository.save(customerEntity);
 
-		RestaurantEntity restaurantEntity = new RestaurantEntity();
-		restaurantEntity.setRestaurantName(restaurantName);
-		restaurantEntity.setFoodPreparationTime(foodPreparationTime);
-		restaurantEntity.setDeliveryTime(deliveryTime);
-		RestaurantEntity savedRestaurant = restaurantRepository.save(restaurantEntity);
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setRestaurantName(restaurantName);
+        restaurantEntity.setFoodPreparationTime(foodPreparationTime);
+        restaurantEntity.setDeliveryTime(deliveryTime);
+        RestaurantEntity savedRestaurant = restaurantRepository.save(restaurantEntity);
 
-		OrderEntity orderEntity = new OrderEntity();
-		orderEntity.setCostOfOrder(order.getCostOfOrder());
-		orderEntity.setDayOfTheWeek(order.getDayOfTheWeek());
-		orderEntity.setCustomer(savedCustomer);
-		orderEntity.setRestaurant(savedRestaurant);
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setCostOfOrder(order.getCostOfOrder());
+        orderEntity.setDayOfTheWeek(order.getDayOfTheWeek());
+        orderEntity.setCustomer(savedCustomer);
+        orderEntity.setRestaurant(savedRestaurant);
 
-		orderRepository.save(orderEntity);
-	}
+        orderRepository.save(orderEntity);
+    }
 
-	@Transactional
-	public void updateOrder(Integer orderId, Order updatedOrder, String restaurantName, Integer foodPreparationTime,
-			Integer deliveryTime, float customerRating) {
-		OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
-		if (orderEntity == null) {
-			throw new IllegalArgumentException("Order not found for ID: " + orderId);
-		}
+    /**
+     * Updates an existing order with new values, including associated customer
+     * and restaurant data.
+     * 
+     * @param orderId the ID of the order to be updated
+     * @param updatedOrder the updated order data
+     * @param restaurantName the name of the restaurant for the order
+     * @param foodPreparationTime the food preparation time for the order
+     * @param deliveryTime the delivery time for the order
+     * @param customerRating the new rating of the customer for the order
+     */
+    @Transactional
+    public void updateOrder(Integer orderId, Order updatedOrder, String restaurantName, Integer foodPreparationTime,
+                            Integer deliveryTime, Float customerRating) {
+        OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
+        if (orderEntity == null) {
+            throw new IllegalArgumentException("Order not found for ID: " + orderId);
+        }
 
-		orderEntity.setCostOfOrder(updatedOrder.getCostOfOrder());
-		orderEntity.setDayOfTheWeek(updatedOrder.getDayOfTheWeek());
+        if (updatedOrder.getCostOfOrder() > 0) {
+            orderEntity.setCostOfOrder(updatedOrder.getCostOfOrder());
+        }
 
-		RestaurantEntity restaurantEntity = orderEntity.getRestaurant();
-		if (restaurantEntity != null) {
-			restaurantEntity.setRestaurantName(restaurantName);
-			restaurantEntity.setFoodPreparationTime(foodPreparationTime);
-			restaurantEntity.setDeliveryTime(deliveryTime);
-		}
+        if (updatedOrder.getDayOfTheWeek() != null) {
+            orderEntity.setDayOfTheWeek(updatedOrder.getDayOfTheWeek());
+        }
 
-		CustomerEntity customerEntity = orderEntity.getCustomer();
-		if (customerEntity != null) {
-			customerEntity.setRating(customerRating);
-		}
+        RestaurantEntity restaurantEntity = orderEntity.getRestaurant();
+        if (restaurantEntity != null) {
+            if (restaurantName != null) {
+                restaurantEntity.setRestaurantName(restaurantName);
+            }
+            if (foodPreparationTime != null) {
+                restaurantEntity.setFoodPreparationTime(foodPreparationTime);
+            }
+            if (deliveryTime != null) {
+                restaurantEntity.setDeliveryTime(deliveryTime);
+            }
+        }
 
-		orderRepository.save(orderEntity);
-		if (restaurantEntity != null) {
-			restaurantRepository.save(restaurantEntity);
-		}
-		if (customerEntity != null) {
-			customerRepository.save(customerEntity);
-		}
-	}
+        CustomerEntity customerEntity = orderEntity.getCustomer();
+        if (customerEntity != null && customerRating != null) {
+            customerEntity.setRating(customerRating);
+        }
 
-	@Override
-	@Transactional
-	public void delete(Integer orderId) {
-		Optional<OrderEntity> orderOpt = orderRepository.findById(orderId);
-		if (orderOpt.isPresent()) {
-			OrderEntity order = orderOpt.get();
+        orderRepository.save(orderEntity);
+        if (restaurantEntity != null) {
+            restaurantRepository.save(restaurantEntity);
+        }
+        if (customerEntity != null) {
+            customerRepository.save(customerEntity);
+        }
+    }
 
-			orderRepository.delete(order);
+    /**
+     * Deletes an order by its ID, along with the associated customer and
+     * restaurant data.
+     *
+     * @param orderId the ID of the order to be deleted
+     */
+    @Override
+    @Transactional
+    public void delete(Integer orderId) {
+        Optional<OrderEntity> orderOpt = orderRepository.findById(orderId);
+        if (orderOpt.isPresent()) {
+            OrderEntity order = orderOpt.get();
 
-			CustomerEntity customer = order.getCustomer();
-			RestaurantEntity restaurant = order.getRestaurant();
+            orderRepository.delete(order);
 
-			if (customer != null) {
-				customerRepository.delete(customer);
-			}
-			if (restaurant != null) {
-				restaurantRepository.delete(restaurant);
-			}
-		}
-	}
-	
-	@Override
-	public List<OrderEntity> getByCustomerRating(float ratingThreshold) {
-	    return orderRepository.findByCustomer_RatingGreaterThanEqual(ratingThreshold);
-	}
-	
-	@Override
-	public List<OrderEntity> getByCustomerRatingRange(float minRating, float maxRating) {
-	    return orderRepository.findByCustomer_RatingBetween(minRating, maxRating);
-	}
+            CustomerEntity customer = order.getCustomer();
+            RestaurantEntity restaurant = order.getRestaurant();
 
+            if (customer != null) {
+                customerRepository.delete(customer);
+            }
+            if (restaurant != null) {
+                restaurantRepository.delete(restaurant);
+            }
+        }
+    }
+
+    /**
+     * Retrieves a list of orders placed by customers within a specified rating
+     * range.
+     *
+     * @param minRating the minimum customer rating
+     * @param maxRating the maximum customer rating
+     * @return a list of {@link OrderEntity} objects within the specified rating range
+     */
+    @Override
+    public List<OrderEntity> getByCustomerRatingRange(float minRating, float maxRating) {
+        return orderRepository.findByCustomer_RatingBetween(minRating, maxRating);
+    }
 }
