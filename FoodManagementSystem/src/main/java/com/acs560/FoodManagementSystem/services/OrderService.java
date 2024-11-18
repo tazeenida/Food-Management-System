@@ -104,4 +104,17 @@ public interface OrderService {
      * @return a list of {@link OrderEntity} objects with a customer rating between the specified minimum and maximum values
      */
     List<OrderEntity> getByCustomerRatingRange(float minRating, float maxRating);
+    
+    /**
+     * Retrieves a list of orders for a specific customer based on their customer ID.
+     *
+     * This method fetches the order history for the customer identified by the given 
+     * customer ID. The order records are returned as a list of {@link OrderEntity} objects.
+     *
+     * @param customerId The unique ID of the customer whose order history is to be retrieved.
+     * @return A list of {@link OrderEntity} objects representing the customer's order history.
+     *         Returns an empty list if no orders are found for the specified customer.
+     */
+    List<OrderEntity> getOrderHistoryByCustomerId(Integer customerId);
+
 }

@@ -244,4 +244,20 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderEntity> getByCustomerRatingRange(float minRating, float maxRating) {
         return orderRepository.findByCustomer_RatingBetween(minRating, maxRating);
     }
+    
+    /**
+     * Retrieves a list of orders for a given customer by their customer ID.
+     * 
+     * This method queries the order repository to fetch all orders associated with 
+     * the specified customer ID. The customer ID is used to find the related orders 
+     * from the order records.
+     * 
+     * @param customerId The ID of the customer whose order history is to be retrieved.
+     * @return A list of {@link OrderEntity} objects representing the customer's order history.
+     *         If no orders are found, an empty list is returned.
+     */
+    public List<OrderEntity> getOrderHistoryByCustomerId(Integer customerId){
+        return orderRepository.findByCustomer_CustomerId(customerId);
+    }
+
 }
