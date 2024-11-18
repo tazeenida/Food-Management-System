@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.acs560.FoodManagementSystem.models.Order;
 import com.acs560.FoodManagementSystem.securities.SecurityService;
 import com.acs560.FoodManagementSystem.views.Customer.CustomerListView;
+import com.acs560.FoodManagementSystem.views.Order.OrderHistoryView;
 import com.acs560.FoodManagementSystem.views.Order.OrderListView;
 import com.acs560.FoodManagementSystem.views.Restaurant.RestaurantListView;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -62,15 +63,16 @@ public class MainLayout extends AppLayout {
 
     /**
      * Creates the navigation drawer with links to different views in the application.
-     * Includes links to the order, customer, and restaurant views.
+     * Includes links to the order, customer, Order History, and restaurant views.
      */
     private void createDrawer() {
         RouterLink orderLink = new RouterLink("Orders", OrderListView.class);
         orderLink.setHighlightCondition(HighlightConditions.sameLocation());
+        RouterLink orderHistoryLink = new RouterLink("Order History", OrderHistoryView.class);
         
         RouterLink customerLink = new RouterLink("Customers", CustomerListView.class);
         RouterLink restaurantLink = new RouterLink("Restaurants", RestaurantListView.class);
         
-        addToDrawer(new VerticalLayout(orderLink, customerLink, restaurantLink));
+        addToDrawer(new VerticalLayout(orderLink, customerLink, restaurantLink, orderHistoryLink));
     }
 }
