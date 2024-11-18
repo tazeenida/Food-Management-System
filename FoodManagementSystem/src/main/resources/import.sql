@@ -46,6 +46,7 @@ INSERT INTO FoodManagementSystem.restaurants (restaurant_id, restaurant_name, fo
 INSERT INTO FoodManagementSystem.restaurants (restaurant_id, restaurant_name, food_preparation_time, delivery_time) VALUES (22, 'Mamma Mia', 20, 24);
 INSERT INTO FoodManagementSystem.restaurants (restaurant_id, restaurant_name, food_preparation_time, delivery_time) VALUES (23, 'Vanessa\'s Dumpling House', 30, 22);
 INSERT INTO FoodManagementSystem.restaurants (restaurant_id, restaurant_name, food_preparation_time, delivery_time) VALUES (24, 'Wild Ginger', 25, 27);
+INSERT INTO FoodManagementSystem.restaurants (restaurant_id, restaurant_name, food_preparation_time, delivery_time) VALUES (25, 'Bistro Vendome', 20, 23);
 INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477147, 30.75, 'Saturday', 337525, 1);
 INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477685, 12.08, 'Saturday', 358141, 2);
 INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477070, 12.23, 'Monday', 66393, 3);
@@ -70,3 +71,7 @@ INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_wee
 INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1478351, 14.99, 'Saturday', 133753, 22);
 INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477361, 5.99, 'Monday', 85940, 23);
 INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477697, 20.00, 'Saturday', 98022, 24);
+INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477698, 29.00, 'Monday', 98022, 25);
+INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477699, 12.23, 'Monday', 98022, 3);
+INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477700, 12.89, 'Saturday', 138896, 16);
+INSERT INTO FoodManagementSystem.orders (order_id, cost_of_order, day_of_the_week, customer_id, restaurant_id) VALUES (1477701, 19.95, 'Friday', 337525, 18);
