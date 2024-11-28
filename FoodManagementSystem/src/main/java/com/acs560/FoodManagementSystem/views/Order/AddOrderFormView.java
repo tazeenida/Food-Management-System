@@ -3,6 +3,7 @@ package com.acs560.FoodManagementSystem.views.Order;
 import com.acs560.FoodManagementSystem.models.Order;
 import com.acs560.FoodManagementSystem.services.OrderService;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
@@ -34,8 +35,7 @@ public class AddOrderFormView extends VerticalLayout {
     private IntegerField foodPreparationTimeField; 
     private IntegerField deliveryTimeField;    
     private TextField customerRatingField;     
-    private Button addOrderButton;              
-    private Button updateOrderButton;           
+    private Button addOrderButton; 
 
     /**
      * Constructs an instance of AddOrderFormView.
@@ -47,6 +47,7 @@ public class AddOrderFormView extends VerticalLayout {
     public AddOrderFormView(OrderService orderService) {
         this.orderService = orderService;
 
+        // Initialize fields with appropriate labels
         orderIdField = new TextField("Order ID (for update)");
         orderIdField.setEnabled(false);
         costOfOrderField = new TextField("Cost of Order");
@@ -57,21 +58,30 @@ public class AddOrderFormView extends VerticalLayout {
         deliveryTimeField = new IntegerField("Delivery Time (minutes)");
         customerRatingField = new TextField("Customer Rating (0-5)");
 
+        // Initialize buttons
         addOrderButton = new Button("Add Order", event -> addOrder());
+        addOrderButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
         Button backButton = new Button("Back to Orders", e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
 
+        // Create the form layout
         FormLayout formLayout = new FormLayout();
         formLayout.add(orderIdField, costOfOrderField, dayOfTheWeekField, restaurantNameField,
                        foodPreparationTimeField, deliveryTimeField, customerRatingField,
                        addOrderButton, backButton);
 
+        // Set the width of the form layout and make sure the form occupies the entire width
+        formLayout.setWidth("100%");
+        
+        // Make each field take up 100% width, this ensures all fields are aligned neatly
+        formLayout.getStyle().set("max-width", "400px").set("margin", "auto");
+
+        // Add the form layout to the vertical layout
         add(formLayout);
+        setAlignItems(Alignment.CENTER); // Center align all the items in the layout
+        setSizeFull(); // Ensure the layout takes up the full screen height for proper centering
     }
 
-    /**
-     * Adds a new order using the input fields' values.
-     * Validates the fields and shows notifications based on the operation's success or failure.
-     */
     private void addOrder() {
         if (validateFields(false)) { 
             try {
@@ -94,12 +104,6 @@ public class AddOrderFormView extends VerticalLayout {
         }
     }
 
-    /**
-     * Validates the input fields for the order form.
-     *
-     * @param isUpdate a boolean indicating whether the validation is for an update operation
-     * @return true if all fields are valid, false otherwise
-     */
     private boolean validateFields(boolean isUpdate) {
         try {
             if (isUpdate && !orderIdField.getValue().isEmpty()) {
@@ -130,9 +134,6 @@ public class AddOrderFormView extends VerticalLayout {
         }
     }
 
-    /**
-     * Clears all input fields in the form.
-     */
     private void clearFields() {
         orderIdField.clear();
         costOfOrderField.clear();
