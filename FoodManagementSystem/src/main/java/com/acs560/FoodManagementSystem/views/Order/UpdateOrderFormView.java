@@ -3,6 +3,7 @@ package com.acs560.FoodManagementSystem.views.Order;
 import com.acs560.FoodManagementSystem.models.Order;
 import com.acs560.FoodManagementSystem.services.OrderService;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
@@ -49,6 +50,7 @@ public class UpdateOrderFormView extends VerticalLayout {
     public UpdateOrderFormView(OrderService orderService) {
         this.orderService = orderService;
 
+        // Initialize fields
         orderIdField = new TextField("Order ID (for update)");
         orderIdField.setEnabled(true);
         costOfOrderField = new TextField("Cost of Order");
@@ -59,14 +61,26 @@ public class UpdateOrderFormView extends VerticalLayout {
         deliveryTimeField = new IntegerField("Delivery Time (minutes)");
         customerRatingField = new TextField("Customer Rating (0-5)");
 
+        // Initialize buttons
         updateOrderButton = new Button("Update Order", event -> updateOrder());
+        updateOrderButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
         Button backButton = new Button("Back to Orders", e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
 
+        // Create the form layout
         FormLayout formLayout = new FormLayout();
-        formLayout.add(orderIdField, costOfOrderField, dayOfTheWeekField, restaurantNameField, foodPreparationTimeField,
-                deliveryTimeField, customerRatingField, updateOrderButton, backButton);
+        formLayout.add(orderIdField, costOfOrderField, dayOfTheWeekField, restaurantNameField, 
+                       foodPreparationTimeField, deliveryTimeField, customerRatingField, 
+                       updateOrderButton, backButton);
 
+        // Set form width and styling for consistency
+        formLayout.setWidth("100%");
+        formLayout.getStyle().set("max-width", "400px").set("margin", "auto");
+
+        // Add the form layout to the main layout
         add(formLayout);
+        setAlignItems(Alignment.CENTER);  // Center align all the items
+        setSizeFull();  // Ensure the layout takes up the full screen height
     }
 
     /**
