@@ -56,7 +56,9 @@ public class MainLayout extends AppLayout {
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo);
         header.setWidthFull();
-        header.addClassNames(LumoUtility.Padding.Vertical.NONE, LumoUtility.Padding.Horizontal.MEDIUM);
+        header.addClassNames(LumoUtility.Padding.Vertical.SMALL, 
+                             LumoUtility.Padding.Horizontal.MEDIUM, 
+                             LumoUtility.Margin.Vertical.MEDIUM); // Added uniform spacing utility
         
         addToNavbar(header);
     }
