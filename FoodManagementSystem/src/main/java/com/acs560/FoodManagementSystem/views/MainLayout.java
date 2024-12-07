@@ -51,7 +51,6 @@ public class MainLayout extends AppLayout {
         
         String username = securityService.getAuthenticatedUser().getUsername();
         Button logout = new Button("Log out " + username, e -> securityService.logout());
-        logout.getElement().setAttribute("title", "Click to log out of the application");
         
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
