@@ -47,27 +47,18 @@ public class DeleteOrderFormView extends VerticalLayout {
         deleteOrderButton.addClassName("primary-button");  // Style for primary action
         backButton.addClassName("secondary-button");       // Style for secondary action
 
-        // Arrange components in a form layout with some custom spacing
+     // Create the form layout
         FormLayout formLayout = new FormLayout();
-        formLayout.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("0", 1),
-                new FormLayout.ResponsiveStep("500px", 2)  // Make the form layout responsive
-        );
         formLayout.add(orderIdField, deleteOrderButton, backButton);
-        formLayout.setColspan(deleteOrderButton, 2); // Make delete button span across columns for better alignment
 
-        // Add the form layout to the parent layout
+        // Set form width and styling for consistency
+        formLayout.setWidth("100%");
+        formLayout.getStyle().set("max-width", "400px").set("margin", "auto");
+
+        // Add the form layout to the main layout
         add(formLayout);
-        
-        // Center the content vertically and horizontally
-        setAlignItems(Alignment.CENTER);  // Center align all components in the layout
-        setJustifyContentMode(JustifyContentMode.CENTER); // Ensure vertical alignment too
-        setSizeFull(); // Optional: makes the layout fill the screen vertically
-        setSpacing(true); // Add spacing between components
-        setPadding(true); // Add padding to the layout
-
-        // Add margin to ensure the form is well centered and not sticking to the screen's edge
-        setMargin(true);
+        setAlignItems(Alignment.CENTER);  // Center align all the items
+        setSizeFull();  
     }
 
     /**
