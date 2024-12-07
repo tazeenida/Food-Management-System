@@ -211,6 +211,12 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param orderId the ID of the order to be deleted
      */
+    /**
+     * Deletes an order by its ID, along with the associated customer and
+     * restaurant data.
+     *
+     * @param orderId the ID of the order to be deleted
+     */
     @Override
     @Transactional
     public void delete(Integer orderId) {
@@ -218,19 +224,29 @@ public class OrderServiceImpl implements OrderService {
         if (orderOpt.isPresent()) {
             OrderEntity order = orderOpt.get();
 
+            // Delete associated order from the orders table
             orderRepository.delete(order);
 
+            // Delete the associated CustomerEntity if it exists
             CustomerEntity customer = order.getCustomer();
-            RestaurantEntity restaurant = order.getRestaurant();
-
             if (customer != null) {
                 customerRepository.delete(customer);
             }
+
+            // Delete the associated RestaurantEntity if it exists
+            RestaurantEntity restaurant = order.getRestaurant();
             if (restaurant != null) {
+                // Before deleting the restaurant, ensure all orders for this restaurant are deleted
+                List<OrderEntity> ordersForRestaurant = orderRepository.findByRestaurant_RestaurantId(restaurant.getRestaurantId());
+                for (OrderEntity restaurantOrder : ordersForRestaurant) {
+                    orderRepository.delete(restaurantOrder); // Delete all orders for this restaurant
+                }
+                // Finally, delete the restaurant
                 restaurantRepository.delete(restaurant);
             }
         }
     }
+
 
     /**
      * Retrieves a list of orders placed by customers within a specified rating

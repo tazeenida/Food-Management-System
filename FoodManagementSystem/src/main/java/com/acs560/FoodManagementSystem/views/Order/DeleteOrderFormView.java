@@ -22,9 +22,9 @@ public class DeleteOrderFormView extends VerticalLayout {
 
     private final OrderService orderService;
 
-    private TextField orderIdField;        
-    private Button deleteOrderButton;     
-    private Button backButton;             
+    private TextField orderIdField;
+    private Button deleteOrderButton;
+    private Button backButton;
 
     /**
      * Constructs a new instance of {@link DeleteOrderFormView}.
@@ -37,15 +37,37 @@ public class DeleteOrderFormView extends VerticalLayout {
         this.orderService = orderService;
 
         orderIdField = new TextField("Order ID (for deletion)");
+        orderIdField.setPlaceholder("Enter the Order ID");
+        orderIdField.setWidth("300px"); // Control the width of the input field
 
         deleteOrderButton = new Button("Delete Order", event -> deleteOrder());
-        backButton = new Button("Back to Orders",
-                e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
+        backButton = new Button("Back to Orders", e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
 
+        // Align buttons and input field properly
+        deleteOrderButton.addClassName("primary-button");  // Style for primary action
+        backButton.addClassName("secondary-button");       // Style for secondary action
+
+        // Arrange components in a form layout with some custom spacing
         FormLayout formLayout = new FormLayout();
+        formLayout.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0", 1),
+                new FormLayout.ResponsiveStep("500px", 2)  // Make the form layout responsive
+        );
         formLayout.add(orderIdField, deleteOrderButton, backButton);
+        formLayout.setColspan(deleteOrderButton, 2); // Make delete button span across columns for better alignment
 
+        // Add the form layout to the parent layout
         add(formLayout);
+        
+        // Center the content vertically and horizontally
+        setAlignItems(Alignment.CENTER);  // Center align all components in the layout
+        setJustifyContentMode(JustifyContentMode.CENTER); // Ensure vertical alignment too
+        setSizeFull(); // Optional: makes the layout fill the screen vertically
+        setSpacing(true); // Add spacing between components
+        setPadding(true); // Add padding to the layout
+
+        // Add margin to ensure the form is well centered and not sticking to the screen's edge
+        setMargin(true);
     }
 
     /**
