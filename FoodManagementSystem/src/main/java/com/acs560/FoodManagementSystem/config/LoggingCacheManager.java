@@ -6,15 +6,24 @@ import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 public class LoggingCacheManager implements CacheManager {
     private static final Logger logger = LoggerFactory.getLogger(LoggingCacheManager.class);
     private final ConcurrentMapCacheManager delegate;
 
+    // Static list to store log messages
+    private static final List<String> logMessages = new ArrayList<>();
+
     public LoggingCacheManager(String... cacheNames) {
         this.delegate = new ConcurrentMapCacheManager(cacheNames);
+    }
+
+    public static List<String> getLogMessages() {
+        return logMessages;
     }
 
     @Override
@@ -52,11 +61,11 @@ public class LoggingCacheManager implements CacheManager {
         @Override
         public ValueWrapper get(Object key) {
             ValueWrapper value = delegate.get(key);
-            if (value != null) {
-                logger.info("Cache hit for key: {} in cache: {} at {}", key, getName(), System.currentTimeMillis());
-            } else {
-                logger.info("Cache miss for key: {} in cache: {} at {}", key, getName(), System.currentTimeMillis());
-            }
+            String logMessage = value != null
+                    ? String.format("Cache hit for key: %s in cache: %s at %d", key, getName(), System.currentTimeMillis())
+                    : String.format("Cache miss for key: %s in cache: %s at %d", key, getName(), System.currentTimeMillis());
+            logMessages.add(logMessage); // Add the log message to the list
+            logger.info(logMessage);
             return value;
         }
 
@@ -64,14 +73,16 @@ public class LoggingCacheManager implements CacheManager {
         public <T> T get(Object key, Callable<T> valueLoader) {
             try {
                 T value = delegate.get(key, valueLoader);
-                if (value != null) {
-                    logger.info("Cache hit for key: {} in cache: {} at {}", key, getName(), System.currentTimeMillis());
-                } else {
-                    logger.info("Cache miss for key: {} in cache: {} at {}", key, getName(), System.currentTimeMillis());
-                }
+                String logMessage = value != null
+                        ? String.format("Cache hit for key: %s in cache: %s at %d", key, getName(), System.currentTimeMillis())
+                        : String.format("Cache miss for key: %s in cache: %s at %d", key, getName(), System.currentTimeMillis());
+                logMessages.add(logMessage);
+                logger.info(logMessage);
                 return value;
             } catch (Exception e) {
-                logger.error("Cache loading failed for key: {} in cache: {} at {}", key, getName(), System.currentTimeMillis(), e);
+                String logMessage = String.format("Cache loading failed for key: %s in cache: %s at %d", key, getName(), System.currentTimeMillis());
+                logMessages.add(logMessage);
+                logger.error(logMessage, e);
                 throw e;
             }
         }
@@ -79,29 +90,35 @@ public class LoggingCacheManager implements CacheManager {
         @Override
         public <T> T get(Object key, Class<T> type) {
             T value = delegate.get(key, type);
-            if (value != null) {
-                logger.info("Cache hit for key: {} of type: {} in cache: {} at {}", key, type.getName(), getName(), System.currentTimeMillis());
-            } else {
-                logger.info("Cache miss for key: {} of type: {} in cache: {} at {}", key, type.getName(), getName(), System.currentTimeMillis());
-            }
+            String logMessage = value != null
+                    ? String.format("Cache hit for key: %s of type: %s in cache: %s at %d", key, type.getName(), getName(), System.currentTimeMillis())
+                    : String.format("Cache miss for key: %s of type: %s in cache: %s at %d", key, type.getName(), getName(), System.currentTimeMillis());
+            logMessages.add(logMessage);
+            logger.info(logMessage);
             return value;
         }
 
         @Override
         public void put(Object key, Object value) {
-            logger.info("Cache put for key: {} in cache: {} at {}", key, getName(), System.currentTimeMillis());
+            String logMessage = String.format("Cache put for key: %s in cache: %s at %d", key, getName(), System.currentTimeMillis());
+            logMessages.add(logMessage);
+            logger.info(logMessage);
             delegate.put(key, value);
         }
 
         @Override
         public void evict(Object key) {
-            logger.info("Cache evicted for key: {} in cache: {} at {}", key, getName(), System.currentTimeMillis());
+            String logMessage = String.format("Cache evicted for key: %s in cache: %s at %d", key, getName(), System.currentTimeMillis());
+            logMessages.add(logMessage);
+            logger.info(logMessage);
             delegate.evict(key);
         }
 
         @Override
         public void clear() {
-            logger.info("Cache cleared for cache: {} at {}", getName(), System.currentTimeMillis());
+            String logMessage = String.format("Cache cleared for cache: %s at %d", getName(), System.currentTimeMillis());
+            logMessages.add(logMessage);
+            logger.info(logMessage);
             delegate.clear();
         }
     }

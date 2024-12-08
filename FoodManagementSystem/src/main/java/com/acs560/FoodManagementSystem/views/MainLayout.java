@@ -18,6 +18,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import com.acs560.FoodManagementSystem.views.CacheLogsView;
 
 /**
  * The {@link MainLayout} class represents the main layout for the Food Management System application.
@@ -69,10 +70,11 @@ public class MainLayout extends AppLayout {
         RouterLink orderLink = new RouterLink("Orders", OrderListView.class);
         orderLink.setHighlightCondition(HighlightConditions.sameLocation());
         RouterLink orderHistoryLink = new RouterLink("Order History", OrderHistoryView.class);
+        RouterLink cacheLogsLink = new RouterLink("Cache Logs", CacheLogsView.class);
         
         RouterLink customerLink = new RouterLink("Customers", CustomerListView.class);
         RouterLink restaurantLink = new RouterLink("Restaurants", RestaurantListView.class);
         
-        addToDrawer(new VerticalLayout(orderLink, customerLink, restaurantLink, orderHistoryLink));
+        addToDrawer(new VerticalLayout(orderLink, customerLink, restaurantLink, orderHistoryLink, cacheLogsLink));
     }
 }
