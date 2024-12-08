@@ -6,9 +6,11 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.router.Route;
 import com.acs560.FoodManagementSystem.config.LoggingCacheManager;
 import jakarta.annotation.security.PermitAll;
+import com.acs560.FoodManagementSystem.views.MainLayout;
+import com.vaadin.flow.component.button.Button;
 
 @PermitAll
-@Route("cache-logs")
+@Route(value = "cache-logs", layout = MainLayout.class)
 public class CacheLogsView extends VerticalLayout {
 
     private TextArea logArea;
