@@ -5,12 +5,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.acs560.FoodManagementSystem.entities.RestaurantEntity;
 import com.acs560.FoodManagementSystem.repositories.RestaurantRepository;
 import com.acs560.FoodManagementSystem.services.RestaurantService;
-
+import com.acs560.FoodManagementSystem.repositories.OrderRepository;
+import com.acs560.FoodManagementSystem.repositories.RestaurantRepository;
+import com.acs560.FoodManagementSystem.repositories.CustomerRepository;
+import com.acs560.FoodManagementSystem.entities.OrderEntity;
+import com.acs560.FoodManagementSystem.services.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Implementation of the {@link RestaurantService} interface for managing restaurant-related operations.
  * <p>
@@ -33,13 +39,14 @@ public class RestaurantServiceImpl implements RestaurantService {
     public RestaurantServiceImpl(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
     }
-    
+
     /**
      * Retrieves a list of all restaurants.
      *
      * @return a list of all {@link RestaurantEntity} objects
      */
     @Override
+    @Cacheable(value = "restaurants", key = "'all'")
     public List<RestaurantEntity> getAll() {
         List<RestaurantEntity> restaurantList = new ArrayList<>();
         restaurantRepository.findAll().forEach(restaurantList::add);
@@ -54,6 +61,7 @@ public class RestaurantServiceImpl implements RestaurantService {
      *         or an empty Optional if not found
      */
     @Override
+    @Cacheable(value = "restaurants", key = "#restaurantId")
     public Optional<RestaurantEntity> getByRestaurantId(Integer restaurantId) {
         return Optional.ofNullable(restaurantRepository.findByRestaurantId(restaurantId));
     }
@@ -65,6 +73,7 @@ public class RestaurantServiceImpl implements RestaurantService {
      * @return a list of {@link RestaurantEntity} objects matching the specified name
      */
     @Override
+    @Cacheable(value = "restaurants", key = "#restaurantName")
     public List<RestaurantEntity> getByRestaurantName(String restaurantName) {
         return this.restaurantRepository.findByRestaurantName(restaurantName);
     }
@@ -76,10 +85,11 @@ public class RestaurantServiceImpl implements RestaurantService {
      * @return a list of {@link RestaurantEntity} objects matching the specified food preparation time
      */
     @Override
+    @Cacheable(value = "restaurants", key = "#foodPreparationTime")
     public List<RestaurantEntity> getByFoodPreparationTime(Integer foodPreparationTime) {
         return this.restaurantRepository.findByFoodPreparationTime(foodPreparationTime);
     }
-    
+
     /**
      * Retrieves a list of restaurants with a specific delivery time.
      *
@@ -87,8 +97,8 @@ public class RestaurantServiceImpl implements RestaurantService {
      * @return a list of {@link RestaurantEntity} objects matching the specified delivery time
      */
     @Override
+    @Cacheable(value = "restaurants", key = "#deliveryTime")
     public List<RestaurantEntity> getByDeliveryTime(Integer deliveryTime) {
         return this.restaurantRepository.findByDeliveryTime(deliveryTime);
     }
-    
 }

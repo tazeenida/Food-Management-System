@@ -15,6 +15,9 @@ import com.acs560.FoodManagementSystem.repositories.CustomerRepository;
 import com.acs560.FoodManagementSystem.repositories.OrderRepository;
 import com.acs560.FoodManagementSystem.repositories.RestaurantRepository;
 import com.acs560.FoodManagementSystem.services.OrderService;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 
 import jakarta.transaction.Transactional;
 
@@ -69,6 +72,7 @@ public class OrderServiceImpl implements OrderService {
      *         an empty Optional if not found
      */
     @Override
+    @Cacheable(value = "orders", key = "#orderId")
     public Optional<OrderEntity> getByOrderId(Integer orderId) {
         return Optional.ofNullable(orderRepository.findByOrderId(orderId));
     }
@@ -80,6 +84,7 @@ public class OrderServiceImpl implements OrderService {
      * @return a list of {@link OrderEntity} objects matching the specified cost
      */
     @Override
+    @Cacheable(value = "ordersByCost", key = "#costOfOrder")
     public List<OrderEntity> getByCostOfOrder(float costOfOrder) {
         return orderRepository.findByCostOfOrder(costOfOrder);
     }
@@ -92,6 +97,7 @@ public class OrderServiceImpl implements OrderService {
      *         the week
      */
     @Override
+    @Cacheable(value = "ordersByDay", key = "#dayOfTheWeek")
     public List<OrderEntity> getByDayOfTheWeek(String dayOfTheWeek) {
         return orderRepository.findByDayOfTheWeek(dayOfTheWeek);
     }
@@ -104,6 +110,7 @@ public class OrderServiceImpl implements OrderService {
      *         customer
      */
     @Override
+    @Cacheable(value = "ordersByCustomer", key = "#customerId")
     public List<OrderEntity> getByCustomer_CustomerId(Integer customerId) {
         return orderRepository.findByCustomer_CustomerId(customerId);
     }
@@ -116,6 +123,7 @@ public class OrderServiceImpl implements OrderService {
      *         restaurant
      */
     @Override
+    @Cacheable(value = "ordersByRestaurant", key = "#restaurantId")
     public List<OrderEntity> getByRestaurant_RestaurantId(Integer restaurantId) {
         return orderRepository.findByRestaurant_RestaurantId(restaurantId);
     }
@@ -131,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Transactional
     public void addOrder(Order order, String restaurantName, Integer foodPreparationTime, Integer deliveryTime,
-                         float customerRating) {
+            float customerRating) {
         CustomerEntity customerEntity = new CustomerEntity();
         customerEntity.setRating(customerRating);
         CustomerEntity savedCustomer = customerRepository.save(customerEntity);
@@ -163,6 +171,7 @@ public class OrderServiceImpl implements OrderService {
      * @param customerRating the new rating of the customer for the order
      */
     @Transactional
+    @CachePut(value = "orders", key = "#orderId")
     public void updateOrder(Integer orderId, Order updatedOrder, String restaurantName, Integer foodPreparationTime,
                             Integer deliveryTime, Float customerRating) {
         OrderEntity orderEntity = orderRepository.findByOrderId(orderId);
@@ -219,6 +228,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     @Transactional
+    @CacheEvict(value = "orders", key = "#orderId")
     public void delete(Integer orderId) {
         Optional<OrderEntity> orderOpt = orderRepository.findById(orderId);
         if (orderOpt.isPresent()) {
@@ -257,6 +267,7 @@ public class OrderServiceImpl implements OrderService {
      * @return a list of {@link OrderEntity} objects within the specified rating range
      */
     @Override
+    @Cacheable(value = "ordersByCustomerRatingRange", key = "#minRating + '-' + #maxRating")
     public List<OrderEntity> getByCustomerRatingRange(float minRating, float maxRating) {
         return orderRepository.findByCustomer_RatingBetween(minRating, maxRating);
     }
