@@ -17,9 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * A view for adding and updating orders in the Food Management System.
- * This class provides a user interface form to input order details such as 
- * cost, day of the week, restaurant name, food preparation time, delivery time, 
- * and customer rating. It utilizes Vaadin components for the layout and interactivity.
+ * <p>
+ * This view provides a user interface with a form to input order details, such as cost, day of the week, 
+ * restaurant name, food preparation time, delivery time, and customer rating. The form also includes validation 
+ * to ensure the input values are valid before submitting.
+ * </p>
+ * <p>
+ * The {@link AddOrderFormView} utilizes Vaadin components for layout and interactivity, and it communicates 
+ * with the {@link OrderService} to handle the order management.
+ * </p>
  */
 @PermitAll
 @Route(value = "add-order-form")
@@ -38,8 +44,11 @@ public class AddOrderFormView extends VerticalLayout {
     private Button addOrderButton; 
 
     /**
-     * Constructs an instance of AddOrderFormView.
-     * Initializes the UI components and sets up the layout.
+     * Constructs an instance of {@link AddOrderFormView}.
+     * <p>
+     * Initializes the user interface components including input fields for order details, 
+     * and sets up the form layout with necessary buttons for submitting or navigating back.
+     * </p>
      *
      * @param orderService the service used to manage orders
      */
@@ -82,6 +91,13 @@ public class AddOrderFormView extends VerticalLayout {
         setSizeFull(); // Ensure the layout takes up the full screen height for proper centering
     }
 
+    /**
+     * Handles the addition of a new order.
+     * <p>
+     * This method validates the form fields, then creates a new {@link Order} object and submits it to the 
+     * {@link OrderService}. If the order is added successfully, a notification is shown and the fields are cleared.
+     * </p>
+     */
     private void addOrder() {
         if (validateFields(false)) { 
             try {
@@ -104,6 +120,16 @@ public class AddOrderFormView extends VerticalLayout {
         }
     }
 
+    /**
+     * Validates the form fields to ensure all required fields have valid values.
+     * <p>
+     * This method checks that numeric fields contain valid numbers and that customer ratings are within 
+     * the allowed range of 0-5. If any validation fails, a notification is shown with an error message.
+     * </p>
+     *
+     * @param isUpdate whether the form is being used for updating an existing order
+     * @return {@code true} if all fields are valid, {@code false} otherwise
+     */
     private boolean validateFields(boolean isUpdate) {
         try {
             if (isUpdate && !orderIdField.getValue().isEmpty()) {
@@ -134,6 +160,12 @@ public class AddOrderFormView extends VerticalLayout {
         }
     }
 
+    /**
+     * Clears all the input fields in the form.
+     * <p>
+     * This method is called after successfully adding an order to reset the form for new input.
+     * </p>
+     */
     private void clearFields() {
         orderIdField.clear();
         costOfOrderField.clear();

@@ -17,12 +17,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The {@link UpdateOrderFormView} class provides a user interface for updating
- * an existing order. It allows users to modify order details including cost,
- * day of the week, restaurant information, preparation time, delivery time, and
- * customer rating.
+ * an existing order in the Food Management System. It allows users to modify
+ * various details of an order, including cost, day of the week, restaurant name,
+ * preparation time, delivery time, and customer rating.
+ * 
  * <p>
- * This view includes a form for inputting new values and a button to update the
- * order. On success, the user is navigated back to the list of orders.
+ * The view consists of a form with fields for each of these details, and a button
+ * to submit the update. After a successful update, the user is redirected to the
+ * order list view.
+ * </p>
+ * 
+ * <p>
+ * This view is accessible via the {@code "update-order-form"} route and requires
+ * that the user is authorized to update orders.
  * </p>
  */
 @PermitAll
@@ -85,8 +92,10 @@ public class UpdateOrderFormView extends VerticalLayout {
 
     /**
      * Updates the order with the new information provided by the user.
+     * This method retrieves the new values from the form fields, validates them,
+     * and then calls the {@link OrderService} to update the order in the system.
      * 
-     * @throws NumberFormatException if invalid data is entered
+     * @throws NumberFormatException if invalid data is entered for numeric fields
      */
     private void updateOrder() {
         if (validateFields(true)) {
@@ -125,10 +134,11 @@ public class UpdateOrderFormView extends VerticalLayout {
     }
 
     /**
-     * Validates the order ID field to ensure it contains a valid integer.
+     * Validates the input fields to ensure that the order ID is a valid integer.
+     * Displays an error notification if validation fails.
      * 
-     * @param isUpdate whether the operation is an update
-     * @return true if the fields are valid, false otherwise
+     * @param isUpdate indicates whether the operation is an update
+     * @return true if all fields are valid, false otherwise
      */
     private boolean validateFields(boolean isUpdate) {
         try {
@@ -143,7 +153,7 @@ public class UpdateOrderFormView extends VerticalLayout {
     }
 
     /**
-     * Clears all input fields in the form.
+     * Clears all the input fields in the form.
      */
     private void clearFields() {
         orderIdField.clear();

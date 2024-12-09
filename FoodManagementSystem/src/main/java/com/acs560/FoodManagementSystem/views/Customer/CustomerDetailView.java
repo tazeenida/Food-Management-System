@@ -8,9 +8,13 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 
 /**
- * The {@link CustomerDetailView} class represents a form to display and edit customer details.
- * It extends {@link FormLayout} and provides fields for the customer's rating.
- * The form is bound to a {@link Customer} object for data binding and validation.
+ * The {@link CustomerDetailView} class represents a form for displaying and editing customer details.
+ * <p>
+ * This form is bound to a {@link Customer} object and includes a field for the customer's rating.
+ * The form is responsible for displaying the customer data and performing validation using 
+ * {@link Binder} and {@link BeanValidationBinder}. It extends {@link FormLayout} to manage the 
+ * layout and binding of fields.
+ * </p>
  */
 public class CustomerDetailView extends FormLayout {
 
@@ -22,8 +26,10 @@ public class CustomerDetailView extends FormLayout {
 
     /**
      * Constructs a new instance of {@link CustomerDetailView}.
-     * Initializes the form layout, binds fields to the {@link Customer} object,
-     * and sets the width of the form.
+     * <p>
+     * This constructor initializes the form layout, binds the form fields to the properties 
+     * of the {@link Customer} object using a {@link Binder}, and sets the width of the form.
+     * </p>
      */
     public CustomerDetailView() {
         addClassName("customer-detail");
@@ -36,9 +42,12 @@ public class CustomerDetailView extends FormLayout {
 
     /**
      * Updates the form with the specified customer's data for display purposes.
-     * The customer object is bound to the form fields.
+     * <p>
+     * This method binds the provided {@link Customer} object to the form fields, allowing 
+     * the form to display the customer data.
+     * </p>
      *
-     * @param customer the {@link Customer} object containing data to be displayed
+     * @param customer the {@link Customer} object containing data to be displayed in the form
      */
     public void setCustomer(Customer customer) {
         binder.readBean(customer);
@@ -46,7 +55,10 @@ public class CustomerDetailView extends FormLayout {
 
     /**
      * Clears the form fields when no customer is selected.
-     * This method can be called to reset the form to its initial state.
+     * <p>
+     * This method resets the form to its initial state, clearing all data fields.
+     * It is typically used when the form is cleared or when a new customer is selected.
+     * </p>
      */
     public void clear() {
         binder.readBean(null);

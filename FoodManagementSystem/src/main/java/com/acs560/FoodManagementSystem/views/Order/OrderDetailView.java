@@ -10,6 +10,8 @@ import com.vaadin.flow.data.binder.Binder;
 /**
  * The {@link OrderDetailView} class represents a form for displaying the details of an order.
  * It extends {@link FormLayout} and utilizes various text fields to present order data.
+ * The form is designed to be read-only and displays order details from an {@link OrderEntity}.
+ * It supports binding fields from the {@link OrderEntity} class to the UI components for display.
  */
 public class OrderDetailView extends FormLayout {
 
@@ -26,36 +28,41 @@ public class OrderDetailView extends FormLayout {
     /**
      * Constructs a new instance of {@link OrderDetailView}.
      * Initializes the form fields and binds them to the corresponding fields in {@link OrderEntity}.
+     * All fields are set to read-only to prevent editing of the displayed order data.
      */
     public OrderDetailView() {
         addClassName("order-detail");
 
+        // Bind the form fields to the corresponding properties in the OrderEntity class
         binder.bindInstanceFields(this);
 
+        // Set the fields to read-only since the form is for displaying order details only
         orderId.setReadOnly(true);
         costOfOrder.setReadOnly(true);
         dayOfTheWeek.setReadOnly(true);
         customerId.setReadOnly(true);
         restaurantId.setReadOnly(true);
 
+        // Add the fields to the form layout
         add(orderId, costOfOrder, dayOfTheWeek, customerId, restaurantId);  
-        setWidth("25em");
+        setWidth("25em"); // Set the width of the form layout
     }
 
     /**
      * Updates the form with order data for display purposes.
+     * This method populates the form fields with the values from the provided {@link OrderEntity}.
      *
      * @param order the order to be displayed, represented as an {@link OrderEntity}
      */
     public void setOrder(OrderEntity order) {
-        binder.readBean(order); 
+        binder.readBean(order); // Bind the order data to the form fields for display
     }
 
     /**
      * Clears the form fields when no order is selected.
-     * This method resets the binder and clears any displayed data.
+     * This method resets the binder and clears any displayed data in the form fields.
      */
     public void clear() {
-        binder.readBean(null); 
+        binder.readBean(null); // Clear the form data by unbinding the current bean
     }
 }

@@ -8,8 +8,11 @@ import com.acs560.FoodManagementSystem.entities.OrderEntity;
 
 /**
  * Repository interface for accessing and manipulating {@link OrderEntity} data.
- * Extends {@link CrudRepository} to provide basic CRUD operations and includes
- * additional query methods for specific attributes.
+ * <p>
+ * This interface extends {@link CrudRepository} to provide basic CRUD operations such as saving, updating, and deleting orders.
+ * It also includes custom query methods for retrieving orders based on specific attributes like order ID, cost, day of the week,
+ * associated customer, and restaurant, as well as filtering based on customer ratings.
+ * </p>
  */
 public interface OrderRepository extends CrudRepository<OrderEntity, Integer> {
 

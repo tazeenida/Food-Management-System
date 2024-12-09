@@ -17,7 +17,9 @@ import java.util.List;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 /**
- * View for displaying the order history of a customer.
+ * The {@link OrderHistoryView} class represents the view for displaying the order history of a customer.
+ * It extends {@link VerticalLayout} and contains a form for entering a customer ID,
+ * along with a grid to display the customer's past orders retrieved from the {@link OrderService}.
  */
 @PermitAll
 @Route(value = "order-history", layout = MainLayout.class)
@@ -30,7 +32,8 @@ public class OrderHistoryView extends VerticalLayout {
     private Button fetchButton;
 
     /**
-     * Constructs the OrderHistoryView with the provided order service.
+     * Constructs the {@link OrderHistoryView} with the provided {@link OrderService}.
+     * Initializes the layout components, including a header, input form for customer ID, and a grid to display orders.
      *
      * @param orderService The service used to fetch order data.
      */
@@ -46,6 +49,11 @@ public class OrderHistoryView extends VerticalLayout {
         setAlignItems(Alignment.CENTER);
     }
 
+    /**
+     * Creates the header section of the view with the title "Customer Order History".
+     *
+     * @return a {@link Div} containing the header.
+     */
     private Div createHeader() {
         H2 header = new H2("Customer Order History");
         Div headerLayout = new Div(header);
@@ -53,6 +61,11 @@ public class OrderHistoryView extends VerticalLayout {
         return headerLayout;
     }
 
+    /**
+     * Creates the input section with a field for entering the Customer ID and a button to fetch the order history.
+     *
+     * @return a {@link Div} containing the input form.
+     */
     private Div createInputLayout() {
         customerIdField = new IntegerField("Customer ID");
         customerIdField.setPlaceholder("Enter Customer ID");
@@ -66,6 +79,11 @@ public class OrderHistoryView extends VerticalLayout {
         return inputLayout;
     }
 
+    /**
+     * Creates and configures the grid to display order details for a customer.
+     *
+     * @return a {@link Grid} displaying order information.
+     */
     private Grid<OrderEntity> createOrderGrid() {
         orderGrid = new Grid<>(OrderEntity.class, false);
         configureOrderGrid();
@@ -74,6 +92,9 @@ public class OrderHistoryView extends VerticalLayout {
         return orderGrid;
     }
 
+    /**
+     * Configures the grid columns to display specific order information, such as Customer ID, Restaurant Name, and Customer Rating.
+     */
     private void configureOrderGrid() {
         orderGrid.addColumn(order -> order.getCustomer().getCustomerId())
                 .setHeader("Customer ID");
@@ -84,7 +105,8 @@ public class OrderHistoryView extends VerticalLayout {
     }
 
     /**
-     * Fetches the order history for the given customer ID and populates the grid.
+     * Fetches the order history for the given customer ID and populates the grid with the retrieved data.
+     * If the customer ID is invalid or no orders are found, a notification is shown.
      */
     private void fetchOrderHistory() {
         Integer customerId = customerIdField.getValue();
@@ -104,7 +126,8 @@ public class OrderHistoryView extends VerticalLayout {
 
     /**
      * Displays a notification with the given message.
-     * @param message the notification message
+     * 
+     * @param message the notification message to display.
      */
     private void showNotification(String message) {
         Notification.show(message, 3000, Notification.Position.MIDDLE);

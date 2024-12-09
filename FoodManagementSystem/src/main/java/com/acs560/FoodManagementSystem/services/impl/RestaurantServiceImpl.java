@@ -11,12 +11,7 @@ import org.springframework.stereotype.Service;
 import com.acs560.FoodManagementSystem.entities.RestaurantEntity;
 import com.acs560.FoodManagementSystem.repositories.RestaurantRepository;
 import com.acs560.FoodManagementSystem.services.RestaurantService;
-import com.acs560.FoodManagementSystem.repositories.OrderRepository;
-import com.acs560.FoodManagementSystem.repositories.RestaurantRepository;
-import com.acs560.FoodManagementSystem.repositories.CustomerRepository;
-import com.acs560.FoodManagementSystem.entities.OrderEntity;
-import com.acs560.FoodManagementSystem.services.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  * Implementation of the {@link RestaurantService} interface for managing restaurant-related operations.
  * <p>
@@ -42,6 +37,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     /**
      * Retrieves a list of all restaurants.
+     * <p>
+     * This method queries the repository to fetch all restaurant records from the database.
+     * </p>
      *
      * @return a list of all {@link RestaurantEntity} objects
      */
@@ -55,6 +53,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     /**
      * Retrieves a restaurant by its unique restaurant ID.
+     * <p>
+     * This method queries the repository to fetch the restaurant record with the specified ID.
+     * </p>
      *
      * @param restaurantId the ID of the restaurant to retrieve
      * @return an {@link Optional} containing the {@link RestaurantEntity} if found,
@@ -68,6 +69,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     /**
      * Retrieves a list of restaurants with a specific name.
+     * <p>
+     * This method queries the repository to find restaurants whose name contains the specified string, ignoring case.
+     * </p>
      *
      * @param restaurantName the name of the restaurant to filter
      * @return a list of {@link RestaurantEntity} objects matching the specified name
@@ -80,6 +84,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     /**
      * Retrieves a list of restaurants with a specific food preparation time.
+     * <p>
+     * This method queries the repository to find restaurants that match the specified food preparation time.
+     * </p>
      *
      * @param foodPreparationTime the food preparation time to filter restaurants
      * @return a list of {@link RestaurantEntity} objects matching the specified food preparation time
@@ -92,6 +99,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     /**
      * Retrieves a list of restaurants with a specific delivery time.
+     * <p>
+     * This method queries the repository to find restaurants that match the specified delivery time.
+     * </p>
      *
      * @param deliveryTime the delivery time to filter restaurants
      * @return a list of {@link RestaurantEntity} objects matching the specified delivery time

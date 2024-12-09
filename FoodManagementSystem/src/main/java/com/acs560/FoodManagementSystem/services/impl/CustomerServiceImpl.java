@@ -11,19 +11,13 @@ import org.springframework.stereotype.Service;
 import com.acs560.FoodManagementSystem.entities.CustomerEntity;
 import com.acs560.FoodManagementSystem.repositories.CustomerRepository;
 import com.acs560.FoodManagementSystem.services.CustomerService;
-import com.acs560.FoodManagementSystem.repositories.OrderRepository;
-import com.acs560.FoodManagementSystem.repositories.RestaurantRepository;
-import com.acs560.FoodManagementSystem.repositories.CustomerRepository;
-import com.acs560.FoodManagementSystem.entities.OrderEntity;
-import com.acs560.FoodManagementSystem.services.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Implementation of the {@link CustomerService} interface for managing customer-related operations.
  * <p>
- * This class provides methods for retrieving customer information based on various criteria,
- * such as customer ID and rating. It utilizes the {@link CustomerRepository} to access
- * customer data from the underlying data source.
+ * This service class provides methods for retrieving customer information from the repository based on various criteria.
+ * The operations include fetching all customers, retrieving customers by their unique customer ID, and finding customers by rating.
+ * The {@link CustomerRepository} is used for interacting with the underlying data store.
  * </p>
  */
 @Service
@@ -32,6 +26,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Constructs a new instance of {@link CustomerServiceImpl}.
+     * <p>
+     * The constructor injects the {@link CustomerRepository} to facilitate interaction with the database
+     * for accessing customer data.
+     * </p>
      *
      * @param customerRepository the repository used to access customer data
      */
@@ -42,6 +40,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Retrieves a list of all customers.
+     * <p>
+     * This method fetches all customers from the repository and returns them as a list of {@link CustomerEntity} objects.
+     * The list is cached to optimize repeated access to customer data.
+     * </p>
      * 
      * @return a list of all {@link CustomerEntity} objects
      */
@@ -55,10 +57,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Retrieves a customer by their unique customer ID.
+     * <p>
+     * This method fetches a single customer based on the provided customer ID. If no customer is found,
+     * an empty {@link Optional} is returned. The result is cached to improve performance on subsequent requests.
+     * </p>
      *
      * @param customerId the ID of the customer to retrieve
      * @return an {@link Optional} containing the {@link CustomerEntity} if found,
-     *         or an empty Optional if not found
+     *         or an empty {@link Optional} if not found
      */
     @Override
     @Cacheable(value = "customers", key = "#customerId")
@@ -68,6 +74,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     /**
      * Retrieves a list of customers with a specific rating.
+     * <p>
+     * This method retrieves customers whose rating matches the specified value. The list of customers is cached
+     * for future use, reducing the need for repeated database queries.
+     * </p>
      *
      * @param rating the rating to filter customers
      * @return a list of {@link CustomerEntity} objects matching the specified rating
