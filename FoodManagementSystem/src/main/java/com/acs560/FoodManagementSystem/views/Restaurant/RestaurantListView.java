@@ -21,12 +21,13 @@ import java.util.List;
 
 /**
  * The {@link RestaurantListView} class is responsible for displaying a list of
- * restaurants in the Food Management System. It provides functionalities to
- * filter restaurants and view their details.
+ * restaurants within the Food Management System. It provides functionalities to
+ * filter restaurants by name and view their details.
  * 
- * This class extends {@link VerticalLayout} and contains a grid for displaying
- * restaurant entities, a form for restaurant details, and a filter field for
- * searching by restaurant name.
+ * <p>
+ * This view includes a grid to display restaurant entities, a form for editing
+ * restaurant details, and a filter field for searching restaurants by their name.
+ * </p>
  */
 @SpringComponent
 @Scope("prototype")
@@ -47,7 +48,7 @@ public class RestaurantListView extends VerticalLayout {
 	/**
 	 * Constructs a new instance of {@link RestaurantListView}. Initializes the view
 	 * with a grid to display restaurants, a form to edit restaurant details, and a
-	 * filter field for searching restaurants.
+	 * filter field for searching restaurants by name.
 	 *
 	 * @param restaurantService the service to handle restaurant-related operations
 	 */
@@ -67,9 +68,10 @@ public class RestaurantListView extends VerticalLayout {
 	}
 
 	/**
-	 * Creates and returns a form view for restaurant details.
+	 * Creates and returns a form view for displaying and editing restaurant details.
+	 * The form is initially hidden and can be made visible when a restaurant is selected.
 	 * 
-	 * @return the created restaurant form view
+	 * @return the created {@link RestaurantFormView} component
 	 */
 	private RestaurantFormView createForm() {
 		RestaurantFormView restaurantForm = new RestaurantFormView();
@@ -79,8 +81,9 @@ public class RestaurantListView extends VerticalLayout {
 
 	/**
 	 * Creates and returns a grid for displaying restaurant entities.
+	 * The grid shows the restaurant's ID, name, food preparation time, and delivery time.
 	 * 
-	 * @return the created grid for restaurant entities
+	 * @return the created {@link Grid} component for restaurant entities
 	 */
 	private Grid<RestaurantEntity> createGrid() {
 		Grid<RestaurantEntity> grid = new Grid<>(RestaurantEntity.class);
@@ -94,8 +97,10 @@ public class RestaurantListView extends VerticalLayout {
 
 	/**
 	 * Creates and returns a text field for filtering restaurants by name.
+	 * The filter text field allows the user to type a name and filter restaurants
+	 * dynamically. The search is delayed by a timeout for debounce effect.
 	 * 
-	 * @return the created filter text field
+	 * @return the created {@link TextField} component for filtering restaurants
 	 */
 	private TextField createFilter() {
 		TextField filterText = new TextField();
@@ -110,9 +115,10 @@ public class RestaurantListView extends VerticalLayout {
 
 	/**
 	 * Creates and returns a toolbar containing the filter text field.
+	 * The toolbar is a horizontal layout that houses the filter text field.
 	 * 
-	 * @param filterText the text field for filtering restaurants
-	 * @return the created toolbar component
+	 * @param filterText the {@link TextField} used for filtering restaurants
+	 * @return the created {@link HorizontalLayout} containing the filter text field
 	 */
 	private Component createToolbar(TextField filterText) {
 		var toolbar = new HorizontalLayout(filterText);
@@ -122,8 +128,10 @@ public class RestaurantListView extends VerticalLayout {
 
 	/**
 	 * Creates and returns a layout containing the grid and the restaurant form.
+	 * The content layout is a horizontal layout that arranges the grid and form
+	 * side by side, with flexible space allocation.
 	 * 
-	 * @return the content layout consisting of the grid and restaurant form
+	 * @return the created {@link HorizontalLayout} component containing the grid and form
 	 */
 	private HorizontalLayout getContent() {
 		HorizontalLayout content = new HorizontalLayout(grid, restaurantForm);
@@ -135,9 +143,9 @@ public class RestaurantListView extends VerticalLayout {
 	}
 
 	/**
-	 * Updates the grid with the list of restaurants based on the current filter. If
-	 * the filter is empty, all restaurants are displayed. Otherwise, the grid is
-	 * populated with restaurants matching the filter.
+	 * Updates the grid with the list of restaurants based on the current filter text.
+	 * If the filter is empty or too short, all restaurants are displayed. Otherwise,
+	 * the grid is populated with restaurants that match the filter text.
 	 */
 	private void updateGrid() {
 	    String filter = filterText.getValue().trim();
@@ -156,6 +164,7 @@ public class RestaurantListView extends VerticalLayout {
 
 	/**
 	 * Closes the restaurant form by hiding it and removing the editing class.
+	 * This method ensures that no form is visible when not editing a restaurant.
 	 */
 	private void closeForm() {
 		restaurantForm.setVisible(false);

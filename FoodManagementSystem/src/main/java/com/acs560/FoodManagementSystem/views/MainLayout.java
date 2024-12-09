@@ -22,7 +22,11 @@ import com.acs560.FoodManagementSystem.views.CacheLogsView;
 
 /**
  * The {@link MainLayout} class represents the main layout for the Food Management System application.
- * It extends {@link AppLayout} and provides a header and a navigation drawer for navigating between different views.
+ * It extends {@link AppLayout} and provides a header and a navigation drawer for easy navigation between different views.
+ * 
+ * The layout includes a logo, a user-specific logout button, and navigation links to various sections of the application such as
+ * Orders, Order History, Customers, Restaurants, and Cache Logs. The layout is designed to offer a user-friendly interface
+ * for managing and accessing different aspects of the Food Management System.
  */
 public class MainLayout extends AppLayout {
     private static final long serialVersionUID = -5291741451913578403L;
@@ -32,9 +36,9 @@ public class MainLayout extends AppLayout {
 
     /**
      * Constructs a new instance of {@link MainLayout}.
-     * Initializes the layout and sets up the header and navigation drawer.
+     * Initializes the main layout by setting up the header and the navigation drawer.
      *
-     * @param securityService the {@link SecurityService} used for user authentication and logout
+     * @param securityService the {@link SecurityService} used for handling user authentication and logout
      */
     public MainLayout(SecurityService securityService) {
         this.securityService = securityService;
@@ -43,8 +47,8 @@ public class MainLayout extends AppLayout {
     }
 
     /**
-     * Creates the header of the layout, which includes the application logo and a logout button.
-     * The logout button displays the authenticated user's username.
+     * Creates the header for the layout. The header contains the application logo and a logout button.
+     * The logout button displays the authenticated user's username and allows the user to log out.
      */
     private void createHeader() {
         H1 logo = new H1("Food Management System");
@@ -63,8 +67,13 @@ public class MainLayout extends AppLayout {
     }
 
     /**
-     * Creates the navigation drawer with links to different views in the application.
-     * Includes links to the order, customer, Order History, and restaurant views.
+     * Creates the navigation drawer for the layout. The drawer contains links to the various views available in the application.
+     * These links provide easy access to different sections of the Food Management System, including:
+     * - Orders
+     * - Order History
+     * - Cache Logs
+     * - Customers
+     * - Restaurants
      */
     private void createDrawer() {
         RouterLink orderLink = new RouterLink("Orders", OrderListView.class);

@@ -20,8 +20,15 @@ import java.util.List;
 
 /**
  * The {@link CustomerListView} class provides a user interface for managing and displaying a list of customers.
- * It extends {@link VerticalLayout} and utilizes a grid to present customer data, along with a filter 
- * for searching customers by their ID.
+ * <p>
+ * This class extends {@link VerticalLayout} and utilizes a {@link Grid} to display customer data, 
+ * with a filter field to search customers by their ID. The filter is applied dynamically as the user types, 
+ * and the grid updates to show matching results.
+ * </p>
+ * <p>
+ * The {@link CustomerListView} fetches customer data using the {@link CustomerService} and provides 
+ * a mechanism to filter the customers by their ID.
+ * </p>
  */
 @SpringComponent
 @Scope("prototype")
@@ -40,7 +47,10 @@ public class CustomerListView extends VerticalLayout {
 
     /**
      * Constructs a new instance of {@link CustomerListView}.
-     * Initializes the view components, including the customer grid and filter text field.
+     * <p>
+     * This constructor initializes the customer grid and filter text field, setting up the view with 
+     * the necessary components for displaying and searching customer data.
+     * </p>
      *
      * @param customerService the service used to access customer data
      */
@@ -59,6 +69,9 @@ public class CustomerListView extends VerticalLayout {
 
     /**
      * Creates and configures the grid for displaying customer data.
+     * <p>
+     * The grid is set up to show the customer ID and rating for each customer, with auto-width columns.
+     * </p>
      *
      * @return a configured {@link Grid} of {@link CustomerEntity} objects
      */
@@ -74,6 +87,10 @@ public class CustomerListView extends VerticalLayout {
 
     /**
      * Creates and configures the filter text field for searching customers.
+     * <p>
+     * The filter field is configured to react to user input with a 1-second delay before updating the grid, 
+     * allowing for efficient searching of customer IDs.
+     * </p>
      *
      * @return a configured {@link TextField} for filtering customer data
      */
@@ -90,9 +107,12 @@ public class CustomerListView extends VerticalLayout {
 
     /**
      * Creates a toolbar containing the filter text field.
+     * <p>
+     * The toolbar provides the search input for filtering customers.
+     * </p>
      *
      * @param filterText the filter text field to be added to the toolbar
-     * @return a {@link Component} representing the toolbar
+     * @return a {@link Component} representing the toolbar containing the filter field
      */
     private Component createToolbar(TextField filterText) {
         var toolbar = new HorizontalLayout(filterText);
@@ -102,8 +122,11 @@ public class CustomerListView extends VerticalLayout {
 
     /**
      * Updates the grid with customer data based on the filter text.
+     * <p>
      * If the filter is empty, all customers are displayed. 
-     * If a valid customer ID is provided, it fetches the corresponding customer.
+     * If a valid customer ID is entered, the grid updates to show only the customer that matches the ID.
+     * If the entered ID is invalid, the grid will show no customers.
+     * </p>
      */
     private void updateGrid() {
         String filter = filterText.getValue();

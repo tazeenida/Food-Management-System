@@ -220,12 +220,6 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param orderId the ID of the order to be deleted
      */
-    /**
-     * Deletes an order by its ID, along with the associated customer and
-     * restaurant data.
-     *
-     * @param orderId the ID of the order to be deleted
-     */
     @Override
     @Transactional
     @CacheEvict(value = "orders", key = "#orderId")
@@ -257,7 +251,6 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-
     /**
      * Retrieves a list of orders placed by customers within a specified rating
      * range.
@@ -271,7 +264,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderEntity> getByCustomerRatingRange(float minRating, float maxRating) {
         return orderRepository.findByCustomer_RatingBetween(minRating, maxRating);
     }
-    
+
     /**
      * Retrieves a list of orders for a given customer by their customer ID.
      * 
@@ -286,5 +279,4 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderEntity> getOrderHistoryByCustomerId(Integer customerId){
         return orderRepository.findByCustomer_CustomerId(customerId);
     }
-
 }

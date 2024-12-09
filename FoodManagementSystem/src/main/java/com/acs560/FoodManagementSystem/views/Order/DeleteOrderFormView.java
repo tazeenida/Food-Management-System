@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * The {@link DeleteOrderFormView} class provides a user interface for deleting an order in the Food Management System.
  * It extends {@link VerticalLayout} and contains a form that allows users to input an order ID for deletion.
+ * The form includes a field to enter the Order ID and buttons to perform the deletion or navigate back to the order list.
+ * This view ensures that only valid order IDs are entered for deletion, and it provides feedback on the operation status.
  */
 @PermitAll
 @Route(value = "delete-order-form")
@@ -36,6 +38,7 @@ public class DeleteOrderFormView extends VerticalLayout {
     public DeleteOrderFormView(OrderService orderService) {
         this.orderService = orderService;
 
+        // Initialize form components
         orderIdField = new TextField("Order ID (for deletion)");
         orderIdField.setPlaceholder("Enter the Order ID");
         orderIdField.setWidth("300px"); // Control the width of the input field
@@ -47,7 +50,7 @@ public class DeleteOrderFormView extends VerticalLayout {
         deleteOrderButton.addClassName("primary-button");  // Style for primary action
         backButton.addClassName("secondary-button");       // Style for secondary action
 
-     // Create the form layout
+        // Create and configure the form layout
         FormLayout formLayout = new FormLayout();
         formLayout.add(orderIdField, deleteOrderButton, backButton);
 
@@ -64,44 +67,47 @@ public class DeleteOrderFormView extends VerticalLayout {
     /**
      * Deletes the order specified by the order ID input in the order ID field.
      * Validates the input field and displays a notification based on the operation's success or failure.
+     * If the deletion is successful, the fields are cleared, and the user is navigated back to the order list.
      */
     private void deleteOrder() {
         if (validateFields()) {
             try {
                 Integer orderId = Integer.parseInt(orderIdField.getValue());
-                orderService.delete(orderId);
-                Notification.show("Order deleted successfully!");
-                clearFields();
-                getUI().ifPresent(ui -> ui.navigate(OrderListView.class));
+                orderService.delete(orderId); // Delete the order using the order service
+                Notification.show("Order deleted successfully!"); // Show success notification
+                clearFields(); // Clear the input fields after successful deletion
+                getUI().ifPresent(ui -> ui.navigate(OrderListView.class)); // Navigate back to order list
             } catch (Exception e) {
-                Notification.show("Error deleting order: " + e.getMessage());
+                Notification.show("Error deleting order: " + e.getMessage()); // Show error notification
             }
         }
     }
 
     /**
      * Validates the input fields in the form.
+     * Ensures that the order ID is not empty and is a valid number.
      *
      * @return true if the order ID is valid and not empty, false otherwise
      */
     private boolean validateFields() {
         try {
             if (orderIdField.getValue().isEmpty()) {
-                Notification.show("Order ID must not be empty.");
+                Notification.show("Order ID must not be empty."); // Show notification if field is empty
                 return false;
             }
-            Integer.parseInt(orderIdField.getValue());
+            Integer.parseInt(orderIdField.getValue()); // Ensure the order ID is a valid number
             return true;
         } catch (NumberFormatException e) {
-            Notification.show("Please ensure the Order ID is a valid number.");
+            Notification.show("Please ensure the Order ID is a valid number."); // Show notification for invalid number
             return false;
         }
     }
 
     /**
      * Clears the input fields in the form.
+     * This is typically called after a successful operation (like deletion).
      */
     private void clearFields() {
-        orderIdField.clear();
+        orderIdField.clear(); // Clear the order ID field
     }
 }

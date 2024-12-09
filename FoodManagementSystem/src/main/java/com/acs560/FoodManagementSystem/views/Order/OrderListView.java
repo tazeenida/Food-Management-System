@@ -21,6 +21,11 @@ import java.util.Optional;
 
 import org.springframework.context.annotation.Scope;
 
+/**
+ * The {@link OrderListView} class represents the view for displaying a list of orders in the Food Management System.
+ * It provides filters for order ID and customer rating, as well as options to add, update, or delete orders.
+ * The view interacts with the {@link OrderService} to fetch and display the orders.
+ */
 @SpringComponent
 @PermitAll
 @Route(value = "", layout = MainLayout.class)
@@ -39,6 +44,12 @@ public class OrderListView extends VerticalLayout {
     private final Button updateOrderButton;
     private final Button deleteOrderButton;
 
+    /**
+     * Constructs the {@link OrderListView} with the provided {@link OrderService}.
+     * Initializes the layout components, including the grid, filter fields, and action buttons.
+     *
+     * @param orderService The service used to fetch and manage orders.
+     */
     public OrderListView(OrderService orderService) {
         this.orderService = orderService;
 
@@ -62,6 +73,12 @@ public class OrderListView extends VerticalLayout {
         updateGrid();
     }
 
+    /**
+     * Creates the grid component that displays the list of orders.
+     * The grid includes columns for order ID, cost, day of the week, customer, and restaurant.
+     *
+     * @return a configured {@link Grid} displaying order information.
+     */
     private Grid<OrderEntity> createGrid() {
         Grid<OrderEntity> grid = new Grid<>(OrderEntity.class);
         grid.addClassNames("order-grid");
@@ -73,6 +90,11 @@ public class OrderListView extends VerticalLayout {
         return grid;
     }
 
+    /**
+     * Creates the filter field for searching orders by order ID.
+     *
+     * @return a {@link TextField} for entering the order ID filter.
+     */
     private TextField createFilter() {
         TextField filterText = new TextField();
         filterText.setPlaceholder("Filter by order ID...");
@@ -82,6 +104,11 @@ public class OrderListView extends VerticalLayout {
         return filterText;
     }
 
+    /**
+     * Creates the filter field for specifying the minimum rating of the customer.
+     *
+     * @return a {@link TextField} for entering the minimum rating filter.
+     */
     private TextField createMinRatingFilter() {
         TextField minRatingField = new TextField();
         minRatingField.setPlaceholder("Min rating...");
@@ -91,6 +118,11 @@ public class OrderListView extends VerticalLayout {
         return minRatingField;
     }
 
+    /**
+     * Creates the filter field for specifying the maximum rating of the customer.
+     *
+     * @return a {@link TextField} for entering the maximum rating filter.
+     */
     private TextField createMaxRatingFilter() {
         TextField maxRatingField = new TextField();
         maxRatingField.setPlaceholder("Max rating...");
@@ -100,6 +132,14 @@ public class OrderListView extends VerticalLayout {
         return maxRatingField;
     }
 
+    /**
+     * Creates the layout for the filter fields (order ID, min rating, and max rating).
+     *
+     * @param filterText The filter for order ID.
+     * @param minRatingField The filter for minimum rating.
+     * @param maxRatingField The filter for maximum rating.
+     * @return a {@link HorizontalLayout} containing the filter fields.
+     */
     private Component createFiltersLayout(TextField filterText, TextField minRatingField, TextField maxRatingField) {
         var filtersLayout = new HorizontalLayout(filterText, minRatingField, maxRatingField);
         filtersLayout.addClassName("filters-layout");
@@ -109,6 +149,14 @@ public class OrderListView extends VerticalLayout {
         return filtersLayout;
     }
 
+    /**
+     * Creates the toolbar containing action buttons for adding, updating, and deleting orders.
+     *
+     * @param addOrderButton The button for adding a new order.
+     * @param updateOrderButton The button for updating an existing order.
+     * @param deleteOrderButton The button for deleting an order.
+     * @return a {@link HorizontalLayout} containing the action buttons.
+     */
     private Component createToolbar(Button addOrderButton, Button updateOrderButton, Button deleteOrderButton) {
         var toolbar = new HorizontalLayout(addOrderButton, updateOrderButton, deleteOrderButton);
         toolbar.addClassName("toolbar");
@@ -119,6 +167,10 @@ public class OrderListView extends VerticalLayout {
         return toolbar;
     }
 
+    /**
+     * Updates the grid to display orders based on the current filter values (order ID and customer rating range).
+     * Filters the orders by order ID, and if the rating filters are provided, by the customer rating range.
+     */
     private void updateGrid() {
         String filter = filterText.getValue();
         String minRating = minRatingField.getValue();
@@ -151,14 +203,23 @@ public class OrderListView extends VerticalLayout {
         grid.setItems(orders);
     }
 
+    /**
+     * Navigates to the add order form view.
+     */
     private void navigateToAddOrder() {
         getUI().ifPresent(ui -> ui.navigate("add-order-form"));
     }
 
+    /**
+     * Navigates to the update order form view.
+     */
     private void navigateToUpdateOrder() {
         getUI().ifPresent(ui -> ui.navigate("update-order-form"));
     }
 
+    /**
+     * Navigates to the delete order form view.
+     */
     private void navigateToDeleteOrder() {
         getUI().ifPresent(ui -> ui.navigate("delete-order-form"));
     }

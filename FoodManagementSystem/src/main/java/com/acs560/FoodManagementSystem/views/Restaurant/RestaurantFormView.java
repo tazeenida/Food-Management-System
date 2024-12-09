@@ -10,9 +10,15 @@ import lombok.Getter;
 
 /**
  * The {@link RestaurantFormView} class provides a form layout for displaying
- * and updating restaurant details.
- * It extends {@link FormLayout} and includes fields for the restaurant's name,
- * food preparation time, and delivery time.
+ * and updating restaurant details within the Food Management System.
+ * This view allows users to input and modify the name, food preparation time,
+ * and delivery time of a restaurant.
+ * 
+ * <p>
+ * The form includes fields for each of these details and is designed to be reused
+ * for both displaying existing restaurant information and allowing the user to update
+ * these details.
+ * </p>
  */
 public class RestaurantFormView extends FormLayout {
 
@@ -24,7 +30,8 @@ public class RestaurantFormView extends FormLayout {
 
     /**
      * Constructs a new instance of {@link RestaurantFormView}.
-     * Initializes the form layout with fields for restaurant details.
+     * This constructor initializes the form layout and adds input fields for the
+     * restaurant details, such as name, food preparation time, and delivery time.
      */
     public RestaurantFormView() {
         add(restaurantName, foodPreparationTime, deliveryTime);
@@ -33,10 +40,11 @@ public class RestaurantFormView extends FormLayout {
 
     /**
      * Updates the form with the provided restaurant details.
-     * If the restaurant is not null, the form fields are populated with
-     * the restaurant's details. If the restaurant is null, the fields are cleared.
+     * If the given restaurant is not null, the form fields are populated with the
+     * restaurant's information. If the restaurant is null, the fields are cleared.
      *
-     * @param restaurant the restaurant to display in the form
+     * @param restaurant the {@link Restaurant} object containing the details to display
+     *                   in the form, or null to clear the fields
      */
     public void update(Restaurant restaurant) {
         this.restaurant = restaurant;
