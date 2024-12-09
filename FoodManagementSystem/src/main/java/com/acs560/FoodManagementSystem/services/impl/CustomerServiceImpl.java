@@ -5,11 +5,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.acs560.FoodManagementSystem.entities.CustomerEntity;
 import com.acs560.FoodManagementSystem.repositories.CustomerRepository;
 import com.acs560.FoodManagementSystem.services.CustomerService;
+import com.acs560.FoodManagementSystem.repositories.OrderRepository;
+import com.acs560.FoodManagementSystem.repositories.RestaurantRepository;
+import com.acs560.FoodManagementSystem.repositories.CustomerRepository;
+import com.acs560.FoodManagementSystem.entities.OrderEntity;
+import com.acs560.FoodManagementSystem.services.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Implementation of the {@link CustomerService} interface for managing customer-related operations.
@@ -22,18 +29,6 @@ import com.acs560.FoodManagementSystem.services.CustomerService;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
-    
-    /**
-     * Retrieves a list of all customers.
-     *
-     * @return a list of all {@link CustomerEntity} objects
-     */
-    @Override
-    public List<CustomerEntity> getAll() {
-        List<CustomerEntity> customerList = new ArrayList<>();
-        customerRepository.findAll().forEach(customerList::add);
-        return customerList;
-    }
 
     /**
      * Constructs a new instance of {@link CustomerServiceImpl}.
@@ -46,6 +41,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     /**
+     * Retrieves a list of all customers.
+     * 
+     * @return a list of all {@link CustomerEntity} objects
+     */
+    @Override
+    @Cacheable(value = "customers", key = "'all'")
+    public List<CustomerEntity> getAll() {
+        List<CustomerEntity> customerList = new ArrayList<>();
+        customerRepository.findAll().forEach(customerList::add);
+        return customerList;
+    }
+
+    /**
      * Retrieves a customer by their unique customer ID.
      *
      * @param customerId the ID of the customer to retrieve
@@ -53,6 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
      *         or an empty Optional if not found
      */
     @Override
+    @Cacheable(value = "customers", key = "#customerId")
     public Optional<CustomerEntity> getByCustomerId(Integer customerId) {
         return Optional.ofNullable(customerRepository.findByCustomerId(customerId));
     }
@@ -64,6 +73,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return a list of {@link CustomerEntity} objects matching the specified rating
      */
     @Override
+    @Cacheable(value = "customers", key = "#rating")
     public List<CustomerEntity> getByRating(float rating) {
         return customerRepository.findByRating(rating);
     }

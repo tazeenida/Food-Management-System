@@ -22,9 +22,9 @@ public class DeleteOrderFormView extends VerticalLayout {
 
     private final OrderService orderService;
 
-    private TextField orderIdField;        
-    private Button deleteOrderButton;     
-    private Button backButton;             
+    private TextField orderIdField;
+    private Button deleteOrderButton;
+    private Button backButton;
 
     /**
      * Constructs a new instance of {@link DeleteOrderFormView}.
@@ -37,15 +37,28 @@ public class DeleteOrderFormView extends VerticalLayout {
         this.orderService = orderService;
 
         orderIdField = new TextField("Order ID (for deletion)");
+        orderIdField.setPlaceholder("Enter the Order ID");
+        orderIdField.setWidth("300px"); // Control the width of the input field
 
         deleteOrderButton = new Button("Delete Order", event -> deleteOrder());
-        backButton = new Button("Back to Orders",
-                e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
+        backButton = new Button("Back to Orders", e -> getUI().ifPresent(ui -> ui.navigate(OrderListView.class)));
 
+        // Align buttons and input field properly
+        deleteOrderButton.addClassName("primary-button");  // Style for primary action
+        backButton.addClassName("secondary-button");       // Style for secondary action
+
+     // Create the form layout
         FormLayout formLayout = new FormLayout();
         formLayout.add(orderIdField, deleteOrderButton, backButton);
 
+        // Set form width and styling for consistency
+        formLayout.setWidth("100%");
+        formLayout.getStyle().set("max-width", "400px").set("margin", "auto");
+
+        // Add the form layout to the main layout
         add(formLayout);
+        setAlignItems(Alignment.CENTER);  // Center align all the items
+        setSizeFull();  
     }
 
     /**

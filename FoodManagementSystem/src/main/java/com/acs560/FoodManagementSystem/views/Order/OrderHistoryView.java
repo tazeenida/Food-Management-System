@@ -7,6 +7,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.router.PageTitle;
@@ -23,10 +24,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 @PageTitle("Order History | Food Management System")
 public class OrderHistoryView extends VerticalLayout {
 
-    private final OrderService orderService;
-    private final Grid<OrderEntity> orderGrid;
-    private final IntegerField customerIdField;
-    private final Button fetchButton;
+    private OrderService orderService;
+    private Grid<OrderEntity> orderGrid;
+    private IntegerField customerIdField;
+    private Button fetchButton;
 
     /**
      * Constructs the OrderHistoryView with the provided order service.
@@ -36,9 +37,23 @@ public class OrderHistoryView extends VerticalLayout {
     public OrderHistoryView(OrderService orderService) {
         this.orderService = orderService;
 
-        H2 header = new H2("Customer Order History");
-        add(header);
+        // Set up the layout components
+        add(createHeader(), createInputLayout(), createOrderGrid());
 
+        // Basic UI configuration
+        setSpacing(true);
+        setPadding(true);
+        setAlignItems(Alignment.CENTER);
+    }
+
+    private Div createHeader() {
+        H2 header = new H2("Customer Order History");
+        Div headerLayout = new Div(header);
+        headerLayout.setWidthFull();
+        return headerLayout;
+    }
+
+    private Div createInputLayout() {
         customerIdField = new IntegerField("Customer ID");
         customerIdField.setPlaceholder("Enter Customer ID");
         customerIdField.setWidth("300px");
@@ -48,22 +63,24 @@ public class OrderHistoryView extends VerticalLayout {
         Div inputLayout = new Div(customerIdField, fetchButton);
         inputLayout.getStyle().set("display", "flex");
         inputLayout.getStyle().set("gap", "10px");
-        add(inputLayout);
+        return inputLayout;
+    }
 
+    private Grid<OrderEntity> createOrderGrid() {
         orderGrid = new Grid<>(OrderEntity.class, false);
-        orderGrid.addColumn(order -> order.getCustomer().getCustomerId())
-                .setHeader("Customer ID");
-        orderGrid.addColumn(order -> order.getRestaurant().getRestaurantName()).setHeader("Restaurant Name");
-        orderGrid.addColumn(order -> order.getCustomer().getRating()).setHeader("Customer Rating");
-
+        configureOrderGrid();
         orderGrid.setWidthFull();
         orderGrid.setHeight("400px");
+        return orderGrid;
+    }
 
-        add(orderGrid);
-
-        setSpacing(true);
-        setPadding(true);
-        setAlignItems(Alignment.CENTER);
+    private void configureOrderGrid() {
+        orderGrid.addColumn(order -> order.getCustomer().getCustomerId())
+                .setHeader("Customer ID");
+        orderGrid.addColumn(order -> order.getRestaurant().getRestaurantName())
+                .setHeader("Restaurant Name");
+        orderGrid.addColumn(order -> order.getCustomer().getRating())
+                .setHeader("Customer Rating");
     }
 
     /**
@@ -71,17 +88,25 @@ public class OrderHistoryView extends VerticalLayout {
      */
     private void fetchOrderHistory() {
         Integer customerId = customerIdField.getValue();
-        if (customerId != null) {
+        if (customerId != null && customerId > 0) {
             List<OrderEntity> orders = orderService.getOrderHistoryByCustomerId(customerId);
             if (orders != null && !orders.isEmpty()) {
                 orderGrid.setItems(orders);
             } else {
-                orderGrid.setItems();
-                orderGrid.getElement().setText("No orders found for the given Customer ID.");
+                showNotification("No orders found for the given Customer ID.");
+                orderGrid.setItems();  // Clear grid data
             }
         } else {
-            orderGrid.setItems();
-            orderGrid.getElement().setText("Please enter a valid Customer ID.");
+            showNotification("Please enter a valid Customer ID.");
+            orderGrid.setItems();  // Clear grid data
         }
+    }
+
+    /**
+     * Displays a notification with the given message.
+     * @param message the notification message
+     */
+    private void showNotification(String message) {
+        Notification.show(message, 3000, Notification.Position.MIDDLE);
     }
 }
