@@ -75,7 +75,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     @Cacheable(value = "restaurants", key = "#restaurantName")
     public List<RestaurantEntity> getByRestaurantName(String restaurantName) {
-        return this.restaurantRepository.findByRestaurantName(restaurantName);
+        return this.restaurantRepository.findByRestaurantNameContainingIgnoreCase(restaurantName);
     }
 
     /**

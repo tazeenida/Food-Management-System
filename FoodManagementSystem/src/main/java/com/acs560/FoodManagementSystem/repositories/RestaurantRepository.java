@@ -24,7 +24,7 @@ public interface RestaurantRepository extends CrudRepository<RestaurantEntity, I
      * @param restaurantName the name of the restaurant to find
      * @return a list of RestaurantEntity objects matching the specified name
      */
-    List<RestaurantEntity> findByRestaurantName(String restaurantName);
+    List<RestaurantEntity> findByRestaurantNameContainingIgnoreCase(String restaurantName);
 
     /**
      * Find all restaurants with a specific food preparation time.
